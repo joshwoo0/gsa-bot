@@ -276,7 +276,7 @@ try {
         var _m$slice$split = m.slice(pos + 1, -1).split(/\s+/),
           _m$slice$split2 = _toArray(_m$slice$split),
           nameAndType = _m$slice$split2[0],
-          properties = _m$slice$split2.slice(1);
+          properties = _arrayLikeToArray(_m$slice$split2).slice(1);
         var _nameAndType$split = nameAndType.split(":"),
           _nameAndType$split2 = _slicedToArray(_nameAndType$split, 2),
           name = _nameAndType$split2[0],
@@ -801,7 +801,7 @@ try {
               var args;
               if (cmd instanceof StructuredCommand) {
                 args = {};
-                var matched = chat.text.match(cmd.regex);
+                var matched = chat.raw.message.match(cmd.regex);
                 if (matched == null) return 0; // continue
                 var groups = matched.slice(1); // 매치된 인자들
                 var is_satisfy = true; // 세부 속성을 만족하는지 여부
@@ -816,7 +816,7 @@ try {
                 if (!is_satisfy) // 세부 속성을 만족하지 못했을 경우
                   return 0; // continue
               } else if (cmd instanceof NaturalCommand) {
-                var filteredText = chat.text.replace(/\s+/g, ' ');
+                var filteredText = chat.raw.message.replace(/\s+/g, ' ');
                 args = Object.assign({}, cmd.query); // 기본값을 가진 객체를 깊은 복사
 
                 // 기본값만 있던 cmd.query 에서 쿼리할 대상으로 보낸 토큰들에 대응되는 단어들을 매칭

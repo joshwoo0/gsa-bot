@@ -798,7 +798,7 @@ class Registry {
 			if (cmd instanceof StructuredCommand) {
 				args = {};
 				
-				let matched = chat.text.match(cmd.regex);
+				let matched = chat.raw.message.match(cmd.regex);
 				if (matched == null)
 					continue;
 				
@@ -818,7 +818,7 @@ class Registry {
 					continue;
 			}
 			else if (cmd instanceof NaturalCommand) {
-				let filteredText = chat.text.replace(/\s+/g, ' ');
+				let filteredText = chat.raw.message.replace(/\s+/g, ' ');
 				
 				args = Object.assign({}, cmd.query);    // 기본값을 가진 객체를 깊은 복사
 
