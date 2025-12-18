@@ -56,7 +56,7 @@ let DB = {
 };
 
 ////////////////////// 채널 등록
-let staffRoom = BotOperator.getChannelById('412937930061983');	// 학생회 임원방
+let staffRoom = BotOperator.getChannelById('440996701585996');	// 학생회 임원방
 let debugRoom1 = BotOperator.getChannelById('413027239498239');	// 디버그방1
 let debugRoom2 = BotOperator.getChannelById('413028250715651');	// 디버그방2
 let logRoom = BotOperator.getChannelById('413032741340672');	// 로그방
@@ -356,6 +356,7 @@ bot.addCommand(new StructuredCommand.Builder()
 		'봇: 취소되었습니다.'
 	])
 	.setExecute((self, chat, channel, { 부서, 기수 }) => {
+		debugRoom1.send('notification checkpoint 1')
 		// 부서가 적절한지 확인
 		if (!부서명List.includes(부서)) {
 			channel.warn(`${부서.은는} 적절한 부서가 아닙니다.\n\n가능한 부서: ${부서명List.join(', ')}`);
