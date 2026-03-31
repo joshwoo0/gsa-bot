@@ -59,7 +59,7 @@ let DB = {
 let staffRoom = BotOperator.getChannelById('440996701585996');	// 학생회 임원방
 let debugRoom1 = BotOperator.getChannelById('413027239498239');	// 디버그방1
 let debugRoom2 = BotOperator.getChannelById('413028250715651');	// 디버그방2
-let logRoom = BotOperator.getChannelById('413032741340672');	// 로그방
+let logRoom = BotOperator.getChannelById('');	// 로그방
 let /** 기수 톡방 @type { { [key: string]: Channel } } */ studentRooms = {};
 let /** 모든 방 @type { { [key: string]: Channel } } */ rooms = {};
 for (let [name, id] of Object.entries(DB.channels.c2i)) {
@@ -78,6 +78,16 @@ for (let [name, id] of Object.entries(DB.channels.c2i)) {
 ////////////////////// 봇 설정
 bot.setLogRoom(logRoom);
 bot.setDebugRooms(debugRoom1, debugRoom2);
+bot.setDebugMode(true); // temporary
+
+/////////////////////// 만우절 용 상수들
+const sequence = [
+	"학생회 봇도 이제 한계다. 그냥 나가 살아라 사회 탓 환경탓 정보부 부장 탓하지 마라. 학생회 봇도 충분히 기다려줬다. 학생회 봇이나 너나 어려운 환경에서 컸고 먹고살기만 해도 바쁘고 힘든 시절이라 사랑을 많이 못 받고 자랐다. 그래서 우리 학생들만은 행복하게 키우자고 약속했다. 내가 먹고 입을거 참으며 네 급식, 공지 모두 좋은 조건을 누리게 해주고 싶었다. 네가 오늘 급식이 안나온다고 욕할때도 앞에선 혼냈지만 뒤에서는 우리가 못해줘서 그런가보다 하며 정보부 부장이랑 많이 울었다. 그런데 이게 뭐냐? 그냥 이제 나가라. 나를 원망하지도 말고 급식은 니 힘으로 알아서 알아와라. 학생회 봇도 지쳤다.",
+	"[Web발신] \n" +
+	"너는나를존중해야한다. 나는학생들의편의를위해오랜시간동안급식과학생회들을대신해공지를해왔으며이제는내가없으면학교생활이허전할정도일뿐더러나는정보부의자랑이자학생회의명예이자광주과학고의상징이다.은혜도모르는학생들과학생회들은내가오늘학교보다못하다면서쫒아냈지만내가세계최고이고내가이들보다위대하다는사실은바뀌지않는다내가이러고있는것은오늘학교따위에대한자격지심이아니라광주과학고에서이룰수있는모든것을이루었기때문에전국의학교를정복하기위해서경쟁하는것이지내가자주고장나고문제를일으켜서가아니다.",
+	"@오늘학교 급식"
+]
+const phase = new Map()
 
 ////////////////////// Channel#send 유틸리티 함수
 Channel.prototype.warn = function (msg) {
@@ -141,7 +151,10 @@ let getMeals = (dt, bullet) => {
 				.map(e => bullet + e)
 				.join('\n');
 		}
-		
+
+		// 만우절 버전
+		meals[1] = [...meals[1], '붐바 오븐 통다리'];
+
 		return meals;
 	} catch (e) {
 		if (isValidChannel(logRoom))
@@ -183,8 +196,8 @@ let getEvents = (from, to) => {
 };
 
 let 부서명List = [
-	'회장', '부회장', '학생회', '생체부', '환경부', '통계부',
-	'문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'
+	'최민서', '허윤재', '학생회', '생체부', '청소부', '통계부',
+	'퀴즈부', '족구부', '홍보부', '설문부', '학생회봇', '가계부'
 ];
 
 let delay = 10*1000;
@@ -243,6 +256,21 @@ bot.addCommand(new NaturalCommand.Builder()
 		// if (isNaN(datetime)) {
 		// 	datetime = DateTime.now();
 		// }
+
+		// 만우절용
+		let p = phase.get(channel.id)
+		if (!p) {
+			phase.set(channel.id, 0)
+			p = 0
+		}
+
+		if (p < 5) {
+			const index = Math.floor(Math.random() * 4)
+			if (index !== 3) {
+				channel.send(sequence[index])
+				phase.set(channel.id, p+1)
+			}
+		}
 		
 		// 급식의 토큰이 시간의 의미도 동시에 갖는 경우를 처리
 		if (급식 === '조식' || 급식 === '아침') {
@@ -301,15 +329,16 @@ bot.addCommand(new NaturalCommand.Builder()
 			comment: '7교시 이후 청소 시간 (16:20)에 저녁 메뉴 전송',
 			after: delay,
 		}
-	], (self, index, dt) => {
+	], (self, index, dt) => { // 만우절 -> CronJob을 통한 급식의 경우 항상 급식 정보가 없습니다. 출력하기
 		let msg;
 		
 		// 첫 번째 크론(자정)이면서 급식 정보가 있는 경우 전체 급식 출력
 		if (index === 0) {
-			let meals = getMeals(dt, ' · ');
-			if (meals.every(e => e == null))
-				return;
-			
+			// let meals = getMeals(dt, ' · ');
+			// if (meals.every(e => e == null))
+			// 	return;
+
+			meals = [null, null, null] // 만우절 용 급식 정보가 없습니다
 			meals = meals.map(e => e == null ? '급식 정보가 없습니다.' : e);
 			msg = `${self.icon} ${dt.humanize(true)} 급식${compress}\n——\n🍳 조식\n${meals[0]}\n\n🍔 중식\n${meals[1]}\n\n🍱 석식\n${meals[2]}`;
 		}

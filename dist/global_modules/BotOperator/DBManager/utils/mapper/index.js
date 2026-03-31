@@ -25,7 +25,7 @@ var J = w,
 })(D, 0x9ca2a);
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x1c9;
     var d = O[I];
     return d;
@@ -44,7 +44,7 @@ var __createBinding = void 0 && (void 0)[J(0x1d2) + 'Binding'] || (Object['creat
       q = J,
       K = J,
       d = {
-        'tBxjB': function tBxjB(m, U) {
+        'tBxjB': function (m, U) {
           return m in U;
         },
         'EOuSs': 'get'
@@ -53,7 +53,7 @@ var __createBinding = void 0 && (void 0)[J(0x1d2) + 'Binding'] || (Object['creat
     var c = Object[q(F.z) + K(F.B) + q(F.O)](B, O);
     c && !(d[q(0x1dd)](d['EOuSs'], c) ? !B[q(0x1cb) + 'le'] : c[q(F.I)] || c[K(0x1d8) + K(F.r)]) || (c = {
       'enumerable': !0x0,
-      'get': function get() {
+      'get': function () {
         return B[O];
       }
     }), Object[K(F.d) + q(F.t)](z, I, c);
@@ -63,7 +63,7 @@ var __createBinding = void 0 && (void 0)[J(0x1d2) + 'Binding'] || (Object['creat
       },
       H = J,
       d = {
-        'fMpAz': function fMpAz(c, m) {
+        'fMpAz': function (c, m) {
           return c === m;
         }
       };
@@ -73,7 +73,7 @@ var __createBinding = void 0 && (void 0)[J(0x1d2) + 'Binding'] || (Object['creat
     var u = Z,
       O = {
         'hHBcL': 'default',
-        'Dgezm': function Dgezm(d, c, m, U) {
+        'Dgezm': function (d, c, m, U) {
           return d(c, m, U);
         }
       };
@@ -81,7 +81,7 @@ var __createBinding = void 0 && (void 0)[J(0x1d2) + 'Binding'] || (Object['creat
   };
 function D() {
   var T = ['opertyDe', '628DyyFKR', '16935kKrUTY', 'able', 'scriptor', '__create', '4125720cikObe', '287802gpmonZ', 'operty', 'getOwnPr', '1527696teeCbe', 'configur', '553026SrvOwJ', 'prototyp', 'Star', '14aofDbM', 'tBxjB', 'writable', '189748jhptjH', 'definePr', 'fMpAz', './mapper', '__esModu', '51072rWVVxS'];
-  D = function D() {
+  D = function () {
     return T;
   };
   return D();

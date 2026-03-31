@@ -1,11 +1,16 @@
 {
   "presets": [
-    "@babel/preset-env",
+    [
+      "@babel/preset-env",
+      {
+        "targets": "> 0.25%, not dead",
+        "useBuiltIns": "usage",
+        "corejs": 3
+      }
+    ],
     "@babel/preset-typescript"
   ],
   "plugins": [
-    "babel-plugin-object-values-to-object-keys",
-    "@babel/plugin-transform-named-capturing-groups-regex",
-    "transform-es2017-object-entries"
+    "babel-plugin-object-values-to-object-keys"
   ]
 }

@@ -26,7 +26,7 @@ var J = w,
 })(D, 0x96101);
 function D() {
   var n = ['default', 'call', './channe', 'NjWzR', 'Star', '60JPcJzP', 'Binding', '3273884FkRCuN', './user', 'operty', '8082hNRXVB', './chat', 'vWGze', '__create', '5582780aSCjcf', '11336SIilVu', 'writable', '__esModu', 'get', 'Bmmkt', 'definePr', 'KcaqA', 'scriptor', '1539226PRDkhp', 'oLiGq', '293524sotVEl', '306709kUPEVj', 'create', '221010Dnqmwz', 'configur', 'hasOwnPr', 'getOwnPr', 'JEKmE', 'able'];
-  D = function D() {
+  D = function () {
     return n;
   };
   return D();
@@ -41,7 +41,7 @@ var __createBinding = void 0 && (void 0)[J(0xc3) + J(0xde)] || (Object[q(0xd1)] 
       K = q,
       H = J,
       d = {
-        'oLiGq': function oLiGq(m, U) {
+        'oLiGq': function (m, U) {
           return m === U;
         },
         'NjWzR': K(b.z)
@@ -50,7 +50,7 @@ var __createBinding = void 0 && (void 0)[J(0xc3) + J(0xde)] || (Object[q(0xd1)] 
     var c = Object[H(b.B) + 'opertyDe' + K(b.O)](B, O);
     c && !(d[H(0xdb)] in c ? !B[K(0xc7) + 'le'] : c[H(b.I)] || c[H(0xd3) + H(0xd7)]) || (c = {
       'enumerable': !0x0,
-      'get': function get() {
+      'get': function () {
         return B[O];
       }
     }), Object[H(0xca) + 'operty'](z, I, c);
@@ -60,7 +60,7 @@ var __createBinding = void 0 && (void 0)[J(0xc3) + J(0xde)] || (Object[q(0xd1)] 
       },
       Z = J,
       d = {
-        'Bmmkt': function Bmmkt(c, m) {
+        'Bmmkt': function (c, m) {
           return c === m;
         }
       };
@@ -78,11 +78,11 @@ var __createBinding = void 0 && (void 0)[J(0xc3) + J(0xde)] || (Object[q(0xd1)] 
       u = J,
       G = q,
       O = {
-        'KcaqA': function KcaqA(d, c) {
+        'KcaqA': function (d, c) {
           return d === c;
         },
         'JEKmE': u(P.z),
-        'vWGze': function vWGze(d, c, m, U) {
+        'vWGze': function (d, c, m, U) {
           return d(c, m, U);
         }
       };
@@ -90,7 +90,7 @@ var __createBinding = void 0 && (void 0)[J(0xc3) + J(0xde)] || (Object[q(0xd1)] 
   };
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xc3;
     var d = O[I];
     return d;
