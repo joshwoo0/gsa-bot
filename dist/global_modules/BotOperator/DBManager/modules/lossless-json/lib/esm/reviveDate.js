@@ -1,5 +1,6 @@
 "use strict";
 
+require("core-js/modules/es.regexp.exec.js");
 function reviveDate(e, t) {
   return "string" == typeof t && isoDateRegex.test(t) ? new Date(t) : t;
 }

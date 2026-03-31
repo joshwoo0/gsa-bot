@@ -1,6 +1,26 @@
 "use strict";
 
+require("core-js/modules/es.symbol.js");
+require("core-js/modules/es.symbol.description.js");
+require("core-js/modules/es.symbol.iterator.js");
+require("core-js/modules/es.array.concat.js");
+require("core-js/modules/es.array.from.js");
 require("core-js/modules/es.array.includes.js");
+require("core-js/modules/es.array.iterator.js");
+require("core-js/modules/es.array.join.js");
+require("core-js/modules/es.array.map.js");
+require("core-js/modules/es.array.slice.js");
+require("core-js/modules/es.array.splice.js");
+require("core-js/modules/es.object.keys.js");
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.regexp.exec.js");
+require("core-js/modules/es.regexp.to-string.js");
+require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/es.string.replace.js");
+require("core-js/modules/es.string.trim.js");
+require("core-js/modules/web.dom-collections.for-each.js");
+require("core-js/modules/web.dom-collections.iterator.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 !function () {
   var t = "undefined" != typeof exports,
     e = {
@@ -24,28 +44,28 @@ require("core-js/modules/es.array.includes.js");
     return o.isArray(t) ? [].concat(arr) : r({}, t);
   }
   var o = {
-    isObject: function (t) {
-      return "object" == typeof t;
+    isObject: function isObject(t) {
+      return "object" == _typeof(t);
     },
-    isArray: function (t) {
+    isArray: function isArray(t) {
       return t instanceof Array;
     },
-    isUndefined: function (t) {
+    isUndefined: function isUndefined(t) {
       return void 0 === t;
     },
-    isNull: function (t) {
+    isNull: function isNull(t) {
       return null === t;
     },
-    isNumber: function (t) {
+    isNumber: function isNumber(t) {
       return "number" == typeof t;
     },
-    isString: function (t) {
+    isString: function isString(t) {
       return "string" == typeof t;
     },
-    isBoolean: function (t) {
+    isBoolean: function isBoolean(t) {
       return "boolean" == typeof t;
     },
-    isDate: function (t) {
+    isDate: function isDate(t) {
       return t instanceof Date;
     }
   };
@@ -173,7 +193,7 @@ require("core-js/modules/es.array.includes.js");
     exceptAll: "EXCEPT ALL"
   };
   function p(t, e) {
-    return this instanceof p ? (p.super_.call(this, "insert"), this.into.apply(this, arguments)) : "object" != typeof e || o.isArray(e) ? new p(t, g(n(arguments).slice(1))) : new p(t, e);
+    return this instanceof p ? (p.super_.call(this, "insert"), this.into.apply(this, arguments)) : "object" != _typeof(e) || o.isArray(e) ? new p(t, g(n(arguments).slice(1))) : new p(t, e);
   }
   function d(t, e) {
     return this instanceof d ? (d.super_.call(this, "update"), this._table = t, e && this.values(e), this) : new d(t, w(n(arguments).slice(1)));
@@ -193,7 +213,7 @@ require("core-js/modules/es.array.includes.js");
     }) : n(t);
   }
   function w(t) {
-    if ("object" == typeof t[0]) return t[0];
+    if ("object" == _typeof(t[0])) return t[0];
     var e = {};
     return null != t[0] && (e[t[0]] = t[1]), e;
   }
@@ -346,7 +366,7 @@ require("core-js/modules/es.array.includes.js");
       var e = !0;
       if (Object.keys(t).forEach(function (n) {
         var r = t[n];
-        "object" != typeof r || r instanceof c || r instanceof u || null == r || (e = !1);
+        "object" != _typeof(r) || r instanceof c || r instanceof u || null == r || (e = !1);
       }), e) return t[0] instanceof u && 1 == t.length ? [t[0]] : (Log.d("ok"), [u.equal(t[0], t[1])]);
       var n = [];
       return Object.keys(t).forEach(function (e) {
@@ -356,7 +376,7 @@ require("core-js/modules/es.array.includes.js");
     }(t);
     return this[e].expressions = this[e].expressions.concat(n), this;
   }, y.prototype._addJoins = function (t, e) {
-    if (this.joins || (this.joins = []), "object" == typeof t[1]) {
+    if (this.joins || (this.joins = []), "object" == _typeof(t[1])) {
       var n = [t[0]],
         r = t[1];
       t[2];
@@ -583,22 +603,22 @@ require("core-js/modules/es.array.includes.js");
     for (var e in u.conversions) if (o["is" + e](t)) return u.conversions[e](t);
     throw new Error("value is of an unsupported type and cannot be converted to SQL: " + t);
   }, u.conversions = {
-    String: function (t) {
+    String: function String(t) {
       return "'" + t.replace(/'/g, "''") + "'";
     },
-    Null: function () {
+    Null: function Null() {
       return "null";
     },
-    Undefined: function () {
+    Undefined: function Undefined() {
       return "null";
     },
-    Number: function (t) {
+    Number: function Number(t) {
       return t.toString();
     },
-    Boolean: function (t) {
+    Boolean: function Boolean(t) {
       return t.toString().toUpperCase();
     },
-    Date: function (t) {
+    Date: function Date(t) {
       return "TIMESTAMP WITH TIME ZONE '" + t.toISOString().replace("T", " ").replace("Z", "+00:00") + "'";
     }
   }, u._handleTables = D, u._handleTable = G, u._handleColumns = W;

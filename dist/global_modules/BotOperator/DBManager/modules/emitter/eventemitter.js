@@ -1,5 +1,8 @@
 "use strict";
 
+require("core-js/modules/es.symbol.js");
+require("core-js/modules/es.array.concat.js");
+require("core-js/modules/es.array.slice.js");
 module.exports = function () {
   var e = Object.prototype.hasOwnProperty,
     t = "~";

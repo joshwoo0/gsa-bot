@@ -1,6 +1,7 @@
 "use strict";
 
-const scriptName = "passwdasker";
+require("core-js/modules/es.string.starts-with.js");
+var scriptName = "passwdasker";
 /**
  * (string) room
  * (string) sender

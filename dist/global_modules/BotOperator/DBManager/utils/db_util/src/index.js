@@ -2,7 +2,7 @@
 
 function D() {
   var n = ['2qsxivC', 'SfSHA', 'default', 'opertyDe', 'definePr', 'configur', 'operty', '3052221ngbxJp', 'dFRzB', 'RXkTL', 'Star', 'getOwnPr', '211974tcJgVS', '9386520frlgrH', '5371074GSDoNS', 'scriptor', 'jBaDQ', 'create', 'hasOwnPr', '__export', 'get', 'Binding', 'JYkQL', 'prototyp', '__create', '1964144tCjVyw', '4wSrgUj', '__esModu', 'writable', '6592805lQpqkI', '24958602suNFWp'];
-  D = function () {
+  D = function D() {
     return n;
   };
   return D();
@@ -11,7 +11,7 @@ var J = w,
   q = w;
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x10c;
     var d = O[I];
     return d;
@@ -55,7 +55,7 @@ var __createBinding = void 0 && (void 0)[J(0x10d) + q(0x129)] || (Object[q(0x125
       K = J,
       H = q,
       d = {
-        'dFRzB': function (m, U) {
+        'dFRzB': function dFRzB(m, U) {
           return m in U;
         },
         'SfSHA': K(b.z)
@@ -64,7 +64,7 @@ var __createBinding = void 0 && (void 0)[J(0x10d) + q(0x129)] || (Object[q(0x125
     var c = Object[H(b.B) + K(b.O) + H(b.I)](B, O);
     c && !(d[H(b.r)](d[K(b.d)], c) ? !B[K(0x110) + 'le'] : c[H(b.t)] || c[H(b.c) + 'able']) || (c = {
       'enumerable': !0x0,
-      'get': function () {
+      'get': function get() {
         return B[O];
       }
     }), Object[H(b.m) + K(b.U)](z, I, c);
@@ -74,7 +74,7 @@ var __createBinding = void 0 && (void 0)[J(0x10d) + q(0x129)] || (Object[q(0x125
       },
       Z = q,
       d = {
-        'JYkQL': function (c, m) {
+        'JYkQL': function JYkQL(c, m) {
           return c === m;
         }
       };
@@ -91,11 +91,11 @@ var __createBinding = void 0 && (void 0)[J(0x10d) + q(0x129)] || (Object[q(0x125
       u = q,
       G = J,
       O = {
-        'RXkTL': function (d, c) {
+        'RXkTL': function RXkTL(d, c) {
           return d === c;
         },
         'EWdPM': u(P.z),
-        'jBaDQ': function (d, c, m, U) {
+        'jBaDQ': function jBaDQ(d, c, m, U) {
           return d(c, m, U);
         }
       };

@@ -2,7 +2,7 @@
 
 function k() {
   var A = ['Star', 'operty', 'prototyp', 'scriptor', '1056505cZPTkv', '9ymcunL', '49040TSxoJK', '__create', '4374078dXfFgM', '2486029JPNSnu', 'definePr', 'default', 'getOwnPr', '1926114TzRTAc', 'XedOE', '4799792cTTTat', 'ckuWA', 'ob-manag', 'rWQVY', 'get', '__export', 'create', 'LHabR', 'writable', '18680616IgXzsi', 'hasOwnPr', 'call', 'HYjPX', '486HtRMiL', '__esModu'];
-  k = function () {
+  k = function k() {
     return A;
   };
   return k();
@@ -11,7 +11,7 @@ var J = o,
   m = o;
 function o(g, O) {
   var N = k();
-  return o = function (l, s) {
+  return o = function o(l, s) {
     l = l - 0x1a8;
     var v = N[l];
     return v;
@@ -54,10 +54,10 @@ var __createBinding = void 0 && (void 0)[J(0x1c4) + 'Binding'] || (Object[m(0x1b
       M = m,
       x = J,
       s = {
-        'HYjPX': function (E, a) {
+        'HYjPX': function HYjPX(E, a) {
           return E === a;
         },
-        'ckuWA': function (E, a) {
+        'ckuWA': function ckuWA(E, a) {
           return E in a;
         },
         'jEtWW': M(V.g)
@@ -66,7 +66,7 @@ var __createBinding = void 0 && (void 0)[J(0x1c4) + 'Binding'] || (Object[m(0x1b
     var v = Object[M(V.N) + 'opertyDe' + M(V.l)](O, N);
     v && !(s[M(V.s)](s['jEtWW'], v) ? !O[M(V.v) + 'le'] : v[x(V.E)] || v['configur' + 'able']) || (v = {
       'enumerable': !0x0,
-      'get': function () {
+      'get': function get() {
         return O[N];
       }
     }), Object[x(0x1a9) + x(V.a)](g, l, v);
@@ -76,7 +76,7 @@ var __createBinding = void 0 && (void 0)[J(0x1c4) + 'Binding'] || (Object[m(0x1b
       },
       n = J,
       s = {
-        'rWQVY': function (v, E) {
+        'rWQVY': function rWQVY(v, E) {
           return v === E;
         }
       };
@@ -93,7 +93,7 @@ var __createBinding = void 0 && (void 0)[J(0x1c4) + 'Binding'] || (Object[m(0x1b
       W = J,
       N = {
         'XedOE': e(L.g),
-        'LHabR': function (s, v, E, a) {
+        'LHabR': function LHabR(s, v, E, a) {
           return s(v, E, a);
         }
       };

@@ -15,6 +15,7 @@
     "@babel/core": "^7.29.0",
     "@babel/plugin-transform-class-properties": "^7.23.3",
     "@babel/plugin-transform-named-capturing-groups-regex": "^7.22.5",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.28.6",
     "@babel/plugin-transform-object-rest-spread": "^7.28.6",
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-typescript": "^7.23.3",

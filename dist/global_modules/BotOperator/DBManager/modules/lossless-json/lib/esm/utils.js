@@ -1,5 +1,9 @@
 "use strict";
 
+require("core-js/modules/es.array.concat.js");
+require("core-js/modules/es.regexp.exec.js");
+require("core-js/modules/es.string.replace.js");
+require("core-js/modules/es.string.starts-with.js");
 function isInteger(e) {
   return INTEGER_REGEX.test(e);
 }

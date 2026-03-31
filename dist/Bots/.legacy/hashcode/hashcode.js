@@ -1,6 +1,6 @@
 "use strict";
 
-const scriptName = "hashcode";
+var scriptName = "hashcode";
 /**
  * (string) room
  * (string) sender
@@ -12,7 +12,7 @@ const scriptName = "hashcode";
  */
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
   if (msg == '/해시코드') {
-    let profileCode = java.lang.String(imageDB.getProfileImage()).hashCode();
+    var profileCode = java.lang.String(imageDB.getProfileImage()).hashCode();
     replier.reply(profileCode);
   }
 }

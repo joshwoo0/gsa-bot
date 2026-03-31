@@ -1,5 +1,10 @@
 'use strict';
 
+require("core-js/modules/es.array.iterator.js");
+require("core-js/modules/es.map.js");
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/web.dom-collections.iterator.js");
 var m = w,
   U = w;
 (function (z, B) {
@@ -26,7 +31,7 @@ var m = w,
 })(D, 0x2a874);
 function D() {
   var u = ['izMOE', '21vNZsFM', '2280872vDDJaK', 'idContex', 'set', '18456ffbwGS', 'geInfo', 'geManage', '__esModu', 'operty', 'ode', 'rsion', '4CXsoyx', '236985RsabBF', '718616CggQnr', 'getPacka', '2579697SIwXCG', 'KakaoTal', 'kVersion', '113590HxHWaW', '10CdsAIh', 'getAndro', '456009zxzaXP', 'definePr', '36UNIXls', 'has'];
-  D = function () {
+  D = function D() {
     return u;
   };
   return D();
@@ -36,7 +41,7 @@ Object[m(0xe7) + U(0xd9)](exports, U(0xd8) + 'le', {
 }), exports['KakaoTal' + m(0xe2)] = void 0x0;
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0xd0;
     var d = O[I];
     return d;
@@ -59,7 +64,7 @@ var KakaoTalkVersion,
     },
     X = U,
     B = {
-      'izMOE': function (I, r) {
+      'izMOE': function izMOE(I, r) {
         return I !== r;
       }
     },
