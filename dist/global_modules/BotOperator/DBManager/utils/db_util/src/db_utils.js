@@ -1,11 +1,5 @@
 'use strict';
 
-require("core-js/modules/es.array.filter.js");
-require("core-js/modules/es.array.includes.js");
-require("core-js/modules/es.array.slice.js");
-require("core-js/modules/es.number.constructor.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.string.includes.js");
 var D7 = w,
   D8 = w;
 (function (z, B) {

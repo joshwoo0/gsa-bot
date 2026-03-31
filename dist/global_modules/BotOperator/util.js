@@ -1,21 +1,5 @@
 "use strict";
 
-require("core-js/modules/es.array.concat.js");
-require("core-js/modules/es.array.flat.js");
-require("core-js/modules/es.array.flat-map.js");
-require("core-js/modules/es.array.join.js");
-require("core-js/modules/es.array.map.js");
-require("core-js/modules/es.array.unscopables.flat.js");
-require("core-js/modules/es.array.unscopables.flat-map.js");
-require("core-js/modules/es.number.is-nan.js");
-require("core-js/modules/es.number.to-fixed.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.regexp.exec.js");
-require("core-js/modules/es.string.pad-start.js");
-require("core-js/modules/es.string.repeat.js");
-require("core-js/modules/es.string.replace.js");
-require("core-js/modules/es.string.split.js");
-require("core-js/modules/esnext.string.replace-all.js");
 Array.prototype.flat || (Array.prototype.flat = function (t, r) {
   return r = this.concat.apply([], this), t > 1 && r.some(Array.isArray) ? r.flat(t - 1) : r;
 }, Array.prototype.flatMap = function (t, r) {

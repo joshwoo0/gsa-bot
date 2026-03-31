@@ -1,7 +1,5 @@
 "use strict";
 
-require("core-js/modules/es.array.join.js");
-require("core-js/modules/es.string.repeat.js");
 var scriptName = "manual";
 /**
  * (string) room

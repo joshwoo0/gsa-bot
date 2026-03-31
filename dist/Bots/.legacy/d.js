@@ -1,22 +1,9 @@
 "use strict";
 
-require("core-js/modules/es.symbol.js");
-require("core-js/modules/es.symbol.description.js");
-require("core-js/modules/es.symbol.iterator.js");
-require("core-js/modules/es.array.iterator.js");
-require("core-js/modules/es.string.iterator.js");
-require("core-js/modules/web.dom-collections.iterator.js");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.org = exports.Security = exports.Message = exports.Log = exports.Http = exports.GlobalLog = exports.FileStream = exports.Event = exports.Device = exports.Database = exports.Broadcast = exports.BotManager = exports.Bot = exports.AppData = exports.App = void 0;
-require("core-js/modules/es.symbol.to-primitive.js");
-require("core-js/modules/es.array.find.js");
-require("core-js/modules/es.date.to-primitive.js");
-require("core-js/modules/es.function.name.js");
-require("core-js/modules/es.number.constructor.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.regexp.to-string.js");
 var _syncRequest = _interopRequireDefault(require("sync-request"));
 var _cheerio = _interopRequireDefault(require("cheerio"));
 var _htmlToText = require("html-to-text");

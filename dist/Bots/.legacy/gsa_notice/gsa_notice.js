@@ -1,9 +1,5 @@
 "use strict";
 
-require("core-js/modules/es.array.includes.js");
-require("core-js/modules/es.array.slice.js");
-require("core-js/modules/es.string.repeat.js");
-require("core-js/modules/es.string.starts-with.js");
 var scriptName = "gsa_notice";
 
 /**

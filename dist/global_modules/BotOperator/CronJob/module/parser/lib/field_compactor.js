@@ -1,12 +1,5 @@
 'use strict';
 
-require("core-js/modules/es.symbol.js");
-require("core-js/modules/es.symbol.description.js");
-require("core-js/modules/es.symbol.iterator.js");
-require("core-js/modules/es.array.iterator.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.string.iterator.js");
-require("core-js/modules/web.dom-collections.iterator.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function k() {
   var h = ['push', 'count', '12784EmHNrs', '4741qkypzO', '198138mZTnNt', '800kRKNLE', 'VkIZw', 'BriJi', 'end', '328YpTyav', 'exports', 'length', 'MzUtS', '28269hCNlGe', 'xmndm', 'TceWJ', 'efdmJ', 'dFbPT', '26488vmwFUq', '546401PhATOk', '23148hofOzL', 'start', 'BVHud', 'JdhyJ', '75HsKlKb', '15UplIUh', 'JHeWi', '1550380nuQjTx', 'step', 'HAYqB'];

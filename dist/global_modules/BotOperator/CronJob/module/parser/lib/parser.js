@@ -1,6 +1,5 @@
 'use strict';
 
-require("core-js/modules/es.array.join.js");
 var e = o,
   W = o;
 (function (g, O) {

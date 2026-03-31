@@ -1,24 +1,5 @@
 'use strict';
 
-require("core-js/modules/es.symbol.js");
-require("core-js/modules/es.symbol.description.js");
-require("core-js/modules/es.symbol.iterator.js");
-require("core-js/modules/es.array.iterator.js");
-require("core-js/modules/es.array.join.js");
-require("core-js/modules/es.array.map.js");
-require("core-js/modules/es.array.slice.js");
-require("core-js/modules/es.function.name.js");
-require("core-js/modules/es.map.js");
-require("core-js/modules/es.number.constructor.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.promise.js");
-require("core-js/modules/es.promise.finally.js");
-require("core-js/modules/es.regexp.constructor.js");
-require("core-js/modules/es.regexp.exec.js");
-require("core-js/modules/es.regexp.to-string.js");
-require("core-js/modules/es.string.iterator.js");
-require("core-js/modules/es.string.match.js");
-require("core-js/modules/web.dom-collections.iterator.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var Dy = w,
   w0 = w;

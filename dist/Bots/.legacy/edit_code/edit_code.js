@@ -1,15 +1,5 @@
 "use strict";
 
-require("core-js/modules/es.array.includes.js");
-require("core-js/modules/es.array.join.js");
-require("core-js/modules/es.array.sort.js");
-require("core-js/modules/es.array.splice.js");
-require("core-js/modules/es.regexp.exec.js");
-require("core-js/modules/es.string.ends-with.js");
-require("core-js/modules/es.string.includes.js");
-require("core-js/modules/es.string.repeat.js");
-require("core-js/modules/es.string.replace.js");
-require("core-js/modules/es.string.starts-with.js");
 var scriptName = "edit_code";
 var path = "sdcard/msgbot/bots/";
 var a;
