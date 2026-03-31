@@ -1,5 +1,6 @@
 "use strict";
 
+require("core-js/modules/es.object.get-own-property-descriptor.js");
 var __createBinding = void 0 && (void 0).__createBinding || (Object.create ? function (e, r, s, t) {
     void 0 === t && (t = s);
     var n = Object.getOwnPropertyDescriptor(r, s);

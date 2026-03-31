@@ -1,5 +1,8 @@
 'use strict';
 
+require("core-js/modules/es.array.join.js");
+require("core-js/modules/es.array.map.js");
+require("core-js/modules/es.object.to-string.js");
 function w(z, B) {
   var O = D();
   return w = function w(I, r) {

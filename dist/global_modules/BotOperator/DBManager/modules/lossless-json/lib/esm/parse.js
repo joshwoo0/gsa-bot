@@ -1,5 +1,8 @@
 "use strict";
 
+require("core-js/modules/es.array.concat.js");
+require("core-js/modules/es.array.slice.js");
+require("core-js/modules/es.regexp.exec.js");
 Object.defineProperty(exports, "__esModule", {
   value: !0
 }), exports.codeLowercaseF = exports.codeUppercaseF = exports.codeLowercaseE = exports.codeUppercaseE = exports.codeLowercaseA = exports.codeUppercaseA = exports.isValidStringCharacter = exports.parse = void 0;

@@ -1,5 +1,18 @@
 "use strict";
 
+require("core-js/modules/es.array.filter.js");
+require("core-js/modules/es.array.includes.js");
+require("core-js/modules/es.array.join.js");
+require("core-js/modules/es.array.slice.js");
+require("core-js/modules/es.object.keys.js");
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.regexp.exec.js");
+require("core-js/modules/es.regexp.to-string.js");
+require("core-js/modules/es.string.ends-with.js");
+require("core-js/modules/es.string.includes.js");
+require("core-js/modules/es.string.replace.js");
+require("core-js/modules/es.string.search.js");
+require("core-js/modules/es.string.trim.js");
 var scriptName = "food";
 
 /**

@@ -1,5 +1,12 @@
 "use strict";
 
+require("core-js/modules/es.array.includes.js");
+require("core-js/modules/es.array.slice.js");
+require("core-js/modules/es.object.keys.js");
+require("core-js/modules/es.regexp.exec.js");
+require("core-js/modules/es.string.ends-with.js");
+require("core-js/modules/es.string.replace.js");
+require("core-js/modules/es.string.search.js");
 var scriptName = "gsa_food_aro";
 
 /**

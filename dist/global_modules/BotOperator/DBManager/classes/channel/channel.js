@@ -1,5 +1,8 @@
 'use strict';
 
+require("core-js/modules/es.array.filter.js");
+require("core-js/modules/es.function.name.js");
+require("core-js/modules/es.object.to-string.js");
 var Z = w,
   u = w;
 (function (z, B) {

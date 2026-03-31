@@ -1,5 +1,12 @@
 "use strict";
 
+require("core-js/modules/es.array.includes.js");
+require("core-js/modules/es.function.name.js");
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.regexp.exec.js");
+require("core-js/modules/es.regexp.to-string.js");
+require("core-js/modules/es.string.replace.js");
+require("core-js/modules/es.string.starts-with.js");
 var scriptName = "eval_code";
 var admin = [-2048786473];
 var Jsoup = org.jsoup.Jsoup;

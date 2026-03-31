@@ -18,6 +18,17 @@ const { Event } = require('../../global_modules/BotOperator/Event');
 const { DateTime } = require('../../global_modules/BotOperator/DateTime');
 const { Channel } = require('../../global_modules/BotOperator/DBManager/classes');
 const { isNumber, isValidChannel, compress, shortURL, prettyBytes, prettyDuration } = require('../../global_modules/BotOperator/util');
+if (!Object.entries) {
+	Object.entries = function(obj) {
+		let ownProps = Object.keys(obj),
+			i = ownProps.length,
+			resArray = new Array(i);
+		while (i--) {
+			resArray[i] = [ownProps[i], obj[ownProps[i]]];
+		}
+		return resArray;
+	};
+}
 
 ////////////////////// 봇 객체 선언
 const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
@@ -144,16 +155,15 @@ let getMeals = (dt, bullet) => {
 		for (let i = 0; i < elements.length; i++) {
 			let element = elements.get(i);
 			let mealType = String(element.select('MMEAL_SC_CODE').text());
-			
-			meals[mealType - 1] = String(element.select('DDISH_NM').text())
+
+			let prototype = String(element.select('DDISH_NM').text())
 				.split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g)
 				.filter(Boolean)
-				.map(e => bullet + e)
+			if (mealType == 2)
+				prototype = [...prototype, '붐바 오븐 통다리 구이']
+			meals[mealType - 1] = prototype.map(e => bullet + e)
 				.join('\n');
 		}
-
-		// 만우절 버전
-		meals[1] = [...meals[1], '붐바 오븐 통다리'];
 
 		return meals;
 	} catch (e) {
@@ -269,6 +279,7 @@ bot.addCommand(new NaturalCommand.Builder()
 			if (index !== 3) {
 				channel.send(sequence[index])
 				phase.set(channel.id, p+1)
+				return;
 			}
 		}
 		

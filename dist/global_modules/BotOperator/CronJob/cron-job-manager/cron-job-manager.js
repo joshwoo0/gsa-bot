@@ -1,5 +1,7 @@
 'use strict';
 
+require("core-js/modules/es.array.map.js");
+require("core-js/modules/es.object.to-string.js");
 var Z = o,
   Y = o;
 (function (g, O) {

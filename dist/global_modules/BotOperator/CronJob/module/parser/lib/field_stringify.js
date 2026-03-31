@@ -1,5 +1,6 @@
 'use strict';
 
+require("core-js/modules/es.array.concat.js");
 var C = o,
   w = o;
 (function (g, O) {

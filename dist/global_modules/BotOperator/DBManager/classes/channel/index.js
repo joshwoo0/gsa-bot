@@ -1,5 +1,6 @@
 'use strict';
 
+require("core-js/modules/es.object.get-own-property-descriptor.js");
 var J = w,
   q = w;
 (function (z, B) {

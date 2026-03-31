@@ -1,5 +1,7 @@
 'use strict';
 
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.regexp.to-string.js");
 var H = w,
   Z = w;
 function D() {
