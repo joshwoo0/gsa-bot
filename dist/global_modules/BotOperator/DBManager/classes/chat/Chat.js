@@ -1,13 +1,5 @@
 'use strict';
 
-require("core-js/modules/es.array.from.js");
-require("core-js/modules/es.array.iterator.js");
-require("core-js/modules/es.array.sort.js");
-require("core-js/modules/es.number.constructor.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.set.js");
-require("core-js/modules/es.string.iterator.js");
-require("core-js/modules/web.dom-collections.iterator.js");
 var J = w,
   q = w;
 (function (z, B) {

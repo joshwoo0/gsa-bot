@@ -4,15 +4,12 @@
       "@babel/preset-env",
       {
         "targets": "ie 11",
-        "useBuiltIns": "usage",
-        "corejs": 3
+        "useBuiltIns": false
       }
     ],
     "@babel/preset-typescript"
   ],
   "plugins": [
-    "babel-plugin-object-values-to-object-keys",
-    "@babel/plugin-transform-object-rest-spread",
-    "@babel/plugin-transform-nullish-coalescing-operator"
+    "babel-plugin-object-values-to-object-keys"
   ]
 }

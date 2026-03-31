@@ -1,7 +1,5 @@
 'use strict';
 
-require("core-js/modules/es.array.from.js");
-require("core-js/modules/es.string.iterator.js");
 function w(z, B) {
   var O = D();
   return w = function w(I, r) {

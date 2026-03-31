@@ -1,37 +1,5 @@
 "use strict";
 
-require("core-js/modules/es.symbol.js");
-require("core-js/modules/es.symbol.description.js");
-require("core-js/modules/es.symbol.iterator.js");
-require("core-js/modules/es.symbol.to-primitive.js");
-require("core-js/modules/es.array.from.js");
-require("core-js/modules/es.array.iterator.js");
-require("core-js/modules/es.date.to-primitive.js");
-require("core-js/modules/es.function.name.js");
-require("core-js/modules/es.number.constructor.js");
-require("core-js/modules/es.string.iterator.js");
-require("core-js/modules/web.dom-collections.iterator.js");
-require("core-js/modules/es.array.concat.js");
-require("core-js/modules/es.array.includes.js");
-require("core-js/modules/es.array.join.js");
-require("core-js/modules/es.array.map.js");
-require("core-js/modules/es.array.slice.js");
-require("core-js/modules/es.array.sort.js");
-require("core-js/modules/es.object.assign.js");
-require("core-js/modules/es.object.entries.js");
-require("core-js/modules/es.object.keys.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.regexp.constructor.js");
-require("core-js/modules/es.regexp.exec.js");
-require("core-js/modules/es.regexp.to-string.js");
-require("core-js/modules/es.string.includes.js");
-require("core-js/modules/es.string.match.js");
-require("core-js/modules/es.string.pad-start.js");
-require("core-js/modules/es.string.repeat.js");
-require("core-js/modules/es.string.replace.js");
-require("core-js/modules/es.string.trim.js");
-require("core-js/modules/es.string.trim-end.js");
-require("core-js/modules/web.dom-collections.for-each.js");
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }

@@ -1,36 +1,6 @@
 "use strict";
 
-require("core-js/modules/es.symbol.js");
-require("core-js/modules/es.symbol.description.js");
-require("core-js/modules/es.symbol.iterator.js");
-require("core-js/modules/es.symbol.to-primitive.js");
-require("core-js/modules/es.array.from.js");
-require("core-js/modules/es.date.to-primitive.js");
-require("core-js/modules/es.object.get-own-property-descriptor.js");
-require("core-js/modules/es.object.get-own-property-descriptors.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-require("core-js/modules/es.array.concat.js");
-require("core-js/modules/es.array.filter.js");
-require("core-js/modules/es.array.find.js");
-require("core-js/modules/es.array.includes.js");
-require("core-js/modules/es.array.iterator.js");
-require("core-js/modules/es.array.join.js");
-require("core-js/modules/es.array.map.js");
-require("core-js/modules/es.array.slice.js");
-require("core-js/modules/es.function.name.js");
-require("core-js/modules/es.map.js");
-require("core-js/modules/es.number.constructor.js");
-require("core-js/modules/es.object.entries.js");
-require("core-js/modules/es.object.keys.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.regexp.exec.js");
-require("core-js/modules/es.regexp.to-string.js");
-require("core-js/modules/es.string.includes.js");
-require("core-js/modules/es.string.iterator.js");
-require("core-js/modules/es.string.replace.js");
-require("core-js/modules/es.string.split.js");
-require("core-js/modules/web.dom-collections.for-each.js");
-require("core-js/modules/web.dom-collections.iterator.js");
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }

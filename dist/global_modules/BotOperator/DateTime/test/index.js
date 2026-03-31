@@ -1,8 +1,5 @@
 "use strict";
 
-require("core-js/modules/es.array.concat.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.regexp.to-string.js");
 var _require = require('../index'),
   DateTime = _require.DateTime;
 parse = function parse(string) {
