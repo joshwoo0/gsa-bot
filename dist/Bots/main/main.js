@@ -2,10 +2,6 @@
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -129,10 +125,6 @@ bot.setLogRoom(logRoom);
 bot.setDebugRooms(debugRoom1, debugRoom2);
 bot.setDebugMode(true); // temporary
 
-/////////////////////// 만우절 용 상수들
-var sequence = ["학생회 봇도 이제 한계다. 그냥 나가 살아라 사회 탓 환경탓 정보부 부장 탓하지 마라. 학생회 봇도 충분히 기다려줬다. 학생회 봇이나 너나 어려운 환경에서 컸고 먹고살기만 해도 바쁘고 힘든 시절이라 사랑을 많이 못 받고 자랐다. 그래서 우리 학생들만은 행복하게 키우자고 약속했다. 내가 먹고 입을거 참으며 네 급식, 공지 모두 좋은 조건을 누리게 해주고 싶었다. 네가 오늘 급식이 안나온다고 욕할때도 앞에선 혼냈지만 뒤에서는 우리가 못해줘서 그런가보다 하며 정보부 부장이랑 많이 울었다. 그런데 이게 뭐냐? 그냥 이제 나가라. 나를 원망하지도 말고 급식은 니 힘으로 알아서 알아와라. 학생회 봇도 지쳤다.", "[Web발신] \n" + "너는나를존중해야한다. 나는학생들의편의를위해오랜시간동안급식과학생회들을대신해공지를해왔으며이제는내가없으면학교생활이허전할정도일뿐더러나는정보부의자랑이자학생회의명예이자광주과학고의상징이다.은혜도모르는학생들과학생회들은내가오늘학교보다못하다면서쫒아냈지만내가세계최고이고내가이들보다위대하다는사실은바뀌지않는다내가이러고있는것은오늘학교따위에대한자격지심이아니라광주과학고에서이룰수있는모든것을이루었기때문에전국의학교를정복하기위해서경쟁하는것이지내가자주고장나고문제를일으켜서가아니다.", "@오늘학교 급식"];
-var phase = new Map();
-
 ////////////////////// Channel#send 유틸리티 함수
 Channel.prototype.warn = function (msg) {
   return this.send("\u26A0 ".concat(msg));
@@ -174,17 +166,15 @@ var getMeals = function getMeals(dt, bullet) {
       return [null, null, null];
     }
     var elements = doc.select('row');
-    var _meals = [null, null, null];
+    var meals = [null, null, null];
     for (var i = 0; i < elements.length; i++) {
       var element = elements.get(i);
       var mealType = String(element.select('MMEAL_SC_CODE').text());
-      var prototype = String(element.select('DDISH_NM').text()).split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g).filter(Boolean);
-      if (mealType == 2) prototype = [].concat(_toConsumableArray(prototype), ['붐바 오븐 통다리 구이']);
-      _meals[mealType - 1] = prototype.map(function (e) {
+      meals[mealType - 1] = String(element.select('DDISH_NM').text()).split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g).filter(Boolean).map(function (e) {
         return bullet + e;
       }).join('\n');
     }
-    return _meals;
+    return meals;
   } catch (e) {
     if (isValidChannel(logRoom)) logRoom.send("Error:".concat(e, "\n").concat(e.stack));
     Log.e(e + '\n' + e.stack);
@@ -225,7 +215,7 @@ var getEvents = function getEvents(from, to) {
   for (var _dtString in satisfied) msg += "".concat(_dtString, "\n").concat(satisfied[_dtString].join('\n'), "\n");
   return msg.slice(0, -1);
 };
-var 부서명List = ['최민서', '허윤재', '학생회', '생체부', '청소부', '통계부', '퀴즈부', '족구부', '홍보부', '설문부', '학생회봇', '가계부'];
+var 부서명List = ['회장', '부회장', '학생회', '생체부', '환경부', '통계부', '문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'];
 var delay = 10 * 1000;
 
 ////////////////////// 명령어 선언
@@ -268,21 +258,6 @@ try {
     // 	datetime = DateTime.now();
     // }
 
-    // 만우절용
-    var p = phase.get(channel.id);
-    if (!p) {
-      phase.set(channel.id, 0);
-      p = 0;
-    }
-    if (p < 5) {
-      var index = Math.floor(Math.random() * 4);
-      if (index !== 3) {
-        channel.send(sequence[index]);
-        phase.set(channel.id, p + 1);
-        return;
-      }
-    }
-
     // 급식의 토큰이 시간의 의미도 동시에 갖는 경우를 처리
     if (급식 === '조식' || 급식 === '아침') {
       datetime = datetime.parse('아침');
@@ -297,10 +272,10 @@ try {
       hour: 0,
       minute: 0
     })) {
-      var _meals2 = getMeals(datetime, ' · ').map(function (e) {
+      var _meals = getMeals(datetime, ' · ').map(function (e) {
         return e ? e : '급식 정보가 없습니다.';
       });
-      channel.send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD").concat(compress, "\n\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(_meals2[0], "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(_meals2[1], "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(_meals2[2]));
+      channel.send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD").concat(compress, "\n\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(_meals[0], "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(_meals[1], "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(_meals[2]));
       return;
     }
     var meals = getMeals(datetime, '· ').map(function (e) {
@@ -351,16 +326,14 @@ try {
     comment: '7교시 이후 청소 시간 (16:20)에 저녁 메뉴 전송',
     after: delay
   }], function (self, index, dt) {
-    // 만우절 -> CronJob을 통한 급식의 경우 항상 급식 정보가 없습니다. 출력하기
     var msg;
 
     // 첫 번째 크론(자정)이면서 급식 정보가 있는 경우 전체 급식 출력
     if (index === 0) {
-      // let meals = getMeals(dt, ' · ');
-      // if (meals.every(e => e == null))
-      // 	return;
-
-      meals = [null, null, null]; // 만우절 용 급식 정보가 없습니다
+      var meals = getMeals(dt, ' · ');
+      if (meals.every(function (e) {
+        return e == null;
+      })) return;
       meals = meals.map(function (e) {
         return e == null ? '급식 정보가 없습니다.' : e;
       });
@@ -368,8 +341,8 @@ try {
     }
     // 첫 번째 크론이 아니면 해당 시간의 급식만 출력
     else {
-      var _meals3 = getMeals(dt, '· ');
-      if (index === 1 && _meals3[1] != null) msg = "\uD83C\uDF54 ".concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(_meals3[1]);else if (index === 2 && _meals3[2] != null) msg = "\uD83C\uDF71 ".concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(_meals3[2]);
+      var _meals2 = getMeals(dt, '· ');
+      if (index === 1 && _meals2[1] != null) msg = "\uD83C\uDF54 ".concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(_meals2[1]);else if (index === 2 && _meals2[2] != null) msg = "\uD83C\uDF71 ".concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(_meals2[2]);
     }
     if (bot.isDebugMod) debugRoom1.send(msg);else {
       for (var 기수 in studentRooms) {
