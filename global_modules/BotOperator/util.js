@@ -41,6 +41,10 @@ const prettyDuration = seconds => {
     return (hours !== "00" ? `${hours}: ` : '') + `${minutes}:${secs}`;
 }
 
+const getChannelName = (channel) => {
+
+}
+
 exports.isNumber = name => /^\d+$/.test(name);
 exports.isNaN = n => Number.isNaN(n);
 exports.compress = '\u200b'.repeat(500);

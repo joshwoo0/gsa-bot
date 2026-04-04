@@ -63,6 +63,7 @@ var prettyDuration = function prettyDuration(seconds) {
   var secs = String(Math.floor(seconds % 60)).padStart(2, '0');
   return (hours !== "00" ? "".concat(hours, ": ") : '') + "".concat(minutes, ":").concat(secs);
 };
+var getChannelName = function getChannelName(channel) {};
 exports.isNumber = function (name) {
   return /^\d+$/.test(name);
 };

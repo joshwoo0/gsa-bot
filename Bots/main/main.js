@@ -6,6 +6,7 @@
  * 2. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (Bots/extract 사용해서 구할 수 있음) ✅
  * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
  *    - 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
+ *    - 이름이 43과 같이 숫자로만 되어 있는 경우 뒤에 spacebar를 붙혀서 인식되게 해주세요
  * 4. 봇 코드를 컴파일한 뒤 명령어를 사용하기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록할 수 있게 해야함
  * 
  * [!] channel 객체 구조 변경으로 인한 수정사항
@@ -18,6 +19,7 @@ const { Event } = require('../../global_modules/BotOperator/Event');
 const { DateTime } = require('../../global_modules/BotOperator/DateTime');
 const { Channel } = require('../../global_modules/BotOperator/DBManager/classes');
 const { isNumber, isValidChannel, compress, shortURL, prettyBytes, prettyDuration } = require('../../global_modules/BotOperator/util');
+const { FS, ChannelCache, UserCache } = require('../../global_modules/BotOperator/cache');
 if (!Object.entries) {
 	Object.entries = function(obj) {
 		let ownProps = Object.keys(obj),
@@ -36,55 +38,16 @@ const bot = BotOperator.getCurrentBot();
 
 ////////////////////// 파일 스트림 객체
 let paths = {
-	users: '/sdcard/msgbot/users.json',
 	channels: '/sdcard/msgbot/channels.json',
-	dmChannels: '/sdcard/msgbot/dmChannels.json',
 };
-let FS = {
-	...FileStream,
-	writeObject: (path, data) => FileStream.write(path, JSON.stringify(data)),
-	readObject: (path, defaultValue = {}) => JSON.parse(
-		FileStream.read(path) ?? JSON.stringify(defaultValue)),
-};
-let DB = {
-	users: FS.readObject(paths.users),
-	channels: FS.readObject(paths.channels, {
-		i2c: {},
-		c2i: {},
-	}),	// i2c: id to customName, c2i: customName to id
-	dmChannels: FS.readObject(paths.dmChannels),
-	reloadUser: (user, channel) => {
-		// user.id, channel.id 도 string 타입
-		DB.users[user.id] = {
-			name: user.name,    // 카톡 이름
-			nth: Number(channel.customName),   // 기수
-		};
-	},
-	reloadChannel: channel => {
-		DB.channels.i2c[channel.id] = channel.customName;
-		DB.channels.c2i[channel.customName] = channel.id;
-	},
-};
+let channelCache = new ChannelCache(FS, paths.channels, BotOperator);
 
 ////////////////////// 채널 등록
 let staffRoom = BotOperator.getChannelById('440996701585996');	// 학생회 임원방
 let debugRoom1 = BotOperator.getChannelById('413027239498239');	// 디버그방1
 let debugRoom2 = BotOperator.getChannelById('413028250715651');	// 디버그방2
 let logRoom = BotOperator.getChannelById('');	// 로그방
-let /** 기수 톡방 @type { { [key: string]: Channel } } */ studentRooms = {};
-let /** 모든 방 @type { { [key: string]: Channel } } */ rooms = {};
-for (let [name, id] of Object.entries(DB.channels.c2i)) {
-	let ch = BotOperator.getChannelById(id);
-	if (ch == null)
-		continue;
-	
-	if (isNumber(name)) {
-		if (ch.isGroupChannel() && ch.raw.active_members_count > 70)  // 기수 톡방이 맞는지 검사 (조건: 최소 70명 이상)
-			studentRooms[name] = ch;
-	}
-	
-	rooms[name] = ch;
-}
+let { rooms, studentRooms } = channelCache.load()
 
 ////////////////////// 봇 설정
 bot.setLogRoom(logRoom);
@@ -338,9 +301,9 @@ bot.addCommand(new NaturalCommand.Builder()
 		if (bot.isDebugMod)
 			debugRoom1.send(msg);
 		else {
-			for (let 기수 in studentRooms) {
+			for (let generation in studentRooms) {
 				if (msg == null) continue;
-				studentRooms[기수].send(msg);
+				studentRooms[generation].send(msg);
 			}
 		}
 	})
@@ -535,35 +498,18 @@ bot.addCommand(new NaturalCommand.Builder()
 
 ////////////////////// db 갱신
 bot.on(Event.MESSAGE, (chat, channel) => {
-	if (!isNumber(channel.customName)) {
+	if (!isNumber(channel.customName)) { // 기수 톡방 검열
+		debugRoom1.send('43 인식 checkpoint')
 		return;
 	}
 	
-	// 개인 톡방 추가
-	if (channel.isDirectChannel() && !(chat.user.id in DB.dmChannels)) {
-		DB.dmChannels[chat.user.id] = channel.id;
-		FS.writeObject(paths.dmChannels, DB.dmChannels);
-	}
-	
-	// 기수 톡방 및 톡방 내 학생들 추가
-	if (!(channel.id in DB.channels.i2c)) {
-		DB.reloadChannel(channel);
-		FS.writeObject(paths.channels, DB.channels);
-		
-		channel.members.forEach(user => DB.reloadUser(user, channel));
-		FS.writeObject(paths.users, DB.users);
-		
+	// 기수 톡방 추가
+	if (!channelCache.has(channel)) {
+		channelCache.push(channel);
+		channelCache.dump()
+
 		studentRooms[channel.customName] = channel;
 		rooms[channel.customName] = channel;
-	}
-	
-	// 이름 변경 적용
-	if (chat.user.id in DB.users &&
-		(DB.users[chat.user.id].name !== chat.user.name ||
-			DB.users[chat.user.id].nth !== parseInt(channel.customName))) {
-		DB.users[chat.user.id].name = chat.user.name;
-		DB.users[chat.user.id].nth = Number(channel.customName);
-		FS.writeObject(paths.users, DB.users);
 	}
 });
 

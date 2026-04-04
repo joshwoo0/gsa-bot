@@ -1,18 +1,8 @@
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * 광주과학고등학교 카카오톡 봇 ver. 2024
  *
@@ -21,6 +11,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
  * 2. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (Bots/extract 사용해서 구할 수 있음) ✅
  * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
  *    - 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
+ *    - 이름이 43과 같이 숫자로만 되어 있는 경우 뒤에 spacebar를 붙혀서 인식되게 해주세요
  * 4. 봇 코드를 컴파일한 뒤 명령어를 사용하기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록할 수 있게 해야함
  * 
  * [!] channel 객체 구조 변경으로 인한 수정사항
@@ -45,6 +36,10 @@ var _require5 = require('BotOperator/util'),
   shortURL = _require5.shortURL,
   prettyBytes = _require5.prettyBytes,
   prettyDuration = _require5.prettyDuration;
+var _require6 = require('BotOperator/cache'),
+  FS = _require6.FS,
+  ChannelCache = _require6.ChannelCache,
+  UserCache = _require6.UserCache;
 if (!Object.entries) {
   Object.entries = function (obj) {
     var ownProps = Object.keys(obj),
@@ -63,62 +58,18 @@ var bot = BotOperator.getCurrentBot();
 
 ////////////////////// 파일 스트림 객체
 var paths = {
-  users: '/sdcard/msgbot/users.json',
-  channels: '/sdcard/msgbot/channels.json',
-  dmChannels: '/sdcard/msgbot/dmChannels.json'
+  channels: '/sdcard/msgbot/channels.json'
 };
-var FS = _objectSpread(_objectSpread({}, FileStream), {}, {
-  writeObject: function writeObject(path, data) {
-    return FileStream.write(path, JSON.stringify(data));
-  },
-  readObject: function readObject(path) {
-    var _FileStream$read;
-    var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    return JSON.parse((_FileStream$read = FileStream.read(path)) !== null && _FileStream$read !== void 0 ? _FileStream$read : JSON.stringify(defaultValue));
-  }
-});
-var DB = {
-  users: FS.readObject(paths.users),
-  channels: FS.readObject(paths.channels, {
-    i2c: {},
-    c2i: {}
-  }),
-  // i2c: id to customName, c2i: customName to id
-  dmChannels: FS.readObject(paths.dmChannels),
-  reloadUser: function reloadUser(user, channel) {
-    // user.id, channel.id 도 string 타입
-    DB.users[user.id] = {
-      name: user.name,
-      // 카톡 이름
-      nth: Number(channel.customName) // 기수
-    };
-  },
-  reloadChannel: function reloadChannel(channel) {
-    DB.channels.i2c[channel.id] = channel.customName;
-    DB.channels.c2i[channel.customName] = channel.id;
-  }
-};
+var channelCache = new ChannelCache(FS, paths.channels, BotOperator);
 
 ////////////////////// 채널 등록
 var staffRoom = BotOperator.getChannelById('440996701585996'); // 학생회 임원방
 var debugRoom1 = BotOperator.getChannelById('413027239498239'); // 디버그방1
 var debugRoom2 = BotOperator.getChannelById('413028250715651'); // 디버그방2
 var logRoom = BotOperator.getChannelById(''); // 로그방
-var /** 기수 톡방 @type { { [key: string]: Channel } } */studentRooms = {};
-var /** 모든 방 @type { { [key: string]: Channel } } */rooms = {};
-for (var _i = 0, _Object$entries = Object.entries(DB.channels.c2i); _i < _Object$entries.length; _i++) {
-  var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-    name = _Object$entries$_i[0],
-    id = _Object$entries$_i[1];
-  var ch = BotOperator.getChannelById(id);
-  if (ch == null) continue;
-  if (isNumber(name)) {
-    if (ch.isGroupChannel() && ch.raw.active_members_count > 70)
-      // 기수 톡방이 맞는지 검사 (조건: 최소 70명 이상)
-      studentRooms[name] = ch;
-  }
-  rooms[name] = ch;
-}
+var _channelCache$load = channelCache.load(),
+  rooms = _channelCache$load.rooms,
+  studentRooms = _channelCache$load.studentRooms;
 
 ////////////////////// 봇 설정
 bot.setLogRoom(logRoom);
@@ -345,9 +296,9 @@ try {
       if (index === 1 && _meals2[1] != null) msg = "\uD83C\uDF54 ".concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(_meals2[1]);else if (index === 2 && _meals2[2] != null) msg = "\uD83C\uDF71 ".concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(_meals2[2]);
     }
     if (bot.isDebugMod) debugRoom1.send(msg);else {
-      for (var 기수 in studentRooms) {
+      for (var generation in studentRooms) {
         if (msg == null) continue;
-        studentRooms[기수].send(msg);
+        studentRooms[generation].send(msg);
       }
     }
   }).build());
@@ -493,32 +444,17 @@ try {
   ////////////////////// db 갱신
   bot.on(Event.MESSAGE, function (chat, channel) {
     if (!isNumber(channel.customName)) {
+      // 기수 톡방 검열
+      debugRoom1.send('43 인식 checkpoint');
       return;
     }
 
-    // 개인 톡방 추가
-    if (channel.isDirectChannel() && !(chat.user.id in DB.dmChannels)) {
-      DB.dmChannels[chat.user.id] = channel.id;
-      FS.writeObject(paths.dmChannels, DB.dmChannels);
-    }
-
-    // 기수 톡방 및 톡방 내 학생들 추가
-    if (!(channel.id in DB.channels.i2c)) {
-      DB.reloadChannel(channel);
-      FS.writeObject(paths.channels, DB.channels);
-      channel.members.forEach(function (user) {
-        return DB.reloadUser(user, channel);
-      });
-      FS.writeObject(paths.users, DB.users);
+    // 기수 톡방 추가
+    if (!channelCache.has(channel)) {
+      channelCache.push(channel);
+      channelCache.dump();
       studentRooms[channel.customName] = channel;
       rooms[channel.customName] = channel;
-    }
-
-    // 이름 변경 적용
-    if (chat.user.id in DB.users && (DB.users[chat.user.id].name !== chat.user.name || DB.users[chat.user.id].nth !== parseInt(channel.customName))) {
-      DB.users[chat.user.id].name = chat.user.name;
-      DB.users[chat.user.id].nth = Number(channel.customName);
-      FS.writeObject(paths.users, DB.users);
     }
   });
 
