@@ -1,3 +1,5 @@
+const {DateTime} = require("../DateTime");
+
 class Connection {
 
     #options
@@ -17,18 +19,19 @@ class Connection {
             ...args
         ].map(opt => opt.join('=')).join('&');
 
+        Log.i(queries);
         let doc = org.jsoup.Jsoup.connect(
                 `https://open.neis.go.kr/hub/${url}?${queries}`
         ).get();
 
         // 에러 코드 처리
         let resultElements = doc.select('RESULT > CODE');
-        if (!resultElements.isEmpty() && !resultElements.text().equals('INFO-000'))
+        if (!resultElements.isEmpty() && !String(resultElements.text()).includes('INFO'))
             throw new Error('Error code of resultElements: ' + resultElements.text());
 
         // 에러 코드 처리 2
         let headElements = doc.select('head > RESULT > CODE');
-        if (!headElements.isEmpty() && !headElements.text().equals('INFO-000'))
+        if (!headElements.isEmpty() && !String(headElements.text()).includes('INFO-000'))
             throw new Error('Error code of headElements: ' + headElements.text());
 
         return doc.select('row')
@@ -52,8 +55,38 @@ class Connection {
         return meals;
     }
 
-    getEvents() {
+    getEvents(from, to) {
+        const NEGLIGIBLE = ['휴업일']
 
+        let elements = this.connect('SchoolSchedule', [
+            ['AA_FROM_YMD', from.toString('YYYYMMDD')],
+            ['AA_TO_YMD', to.toString('YYYYMMDD')]
+        ])
+        let events = []
+
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements.get(i);
+            const instDeductionNm = String(element.select('SBTR_DD_SC_NM').text());
+            if (NEGLIGIBLE.includes(instDeductionNm))
+                continue;
+
+            const name = String(element.select('EVENT_NM').text());
+            const isTargetGrade = ['ONE', 'TW', 'THREE'].map(g =>
+                String(element.select(`${g}_GRADE_EVENT_YN`).text()) === 'Y'
+            );
+            const date = String(element.select('AA_YMD').text());
+            const datetime = new DateTime();
+            datetime.year = parseInt(date.slice(0, 4), 10)
+            datetime.month = parseInt(date.slice(4, 6), 10)
+            datetime.day = parseInt(date.slice(6, 8), 10)
+
+            events.push({
+                name: name,
+                datetime: datetime,
+                isTargetGrade: isTargetGrade,
+            })
+        }
+        return events
     }
 }
 

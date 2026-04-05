@@ -79,7 +79,7 @@ const connection = new Connection(cache.get('apiKey'))
  * @param {String} bullet
  * @return {String[]}
  */
-let getMeals = (dt, bullet) => {
+const getMeals = (dt, bullet) => {
 	try {
 		return connection.getMeals(dt)
 			.map(e =>
@@ -87,7 +87,7 @@ let getMeals = (dt, bullet) => {
 			)
 	} catch (e) {
 		if (isValidChannel(debugRoom2))
-			debugRoom2.send(`Error:${e}\n${e.stack}`);
+			debugRoom2.send(`봇 가동중 오류가 발생하였습니다\n\n${e}\n${e.stack}`);
 
 		Log.e(e + '\n' + e.stack);
 		return [null, null, null];
@@ -97,39 +97,47 @@ let getMeals = (dt, bullet) => {
 /**
  * @param {DateTime} from
  * @param {DateTime} to
+ * @param {number} grade
  * @returns {string}
  */
-let getEvents = (from, to) => {
-	let events = Database.readObject('school_events.json');
-	let satisfied = {};
-	
-	for (let date in events) {
-		let dt = DateTime.parse(date);
-		let dtString = dt.toString('M월 D일:');
-		
-		if (from.le(dt) && dt.le(to)) {
+const getEvents = (from, to, grade) => {
+	try {
+		const events = connection.getEvents(from, to)
+		const satisfied = {};
+
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i];
+			if (grade in [1, 2, 3] && !event.isTargetGrade[grade])
+				continue;
+
+			let dtString = event.datetime.toString('M월 D일:');
+
 			if (!(dtString in satisfied)) {
 				satisfied[dtString] = [];
 			}
-			
-			for (let event of events[date].split(/,\s+/))
-				satisfied[dtString].push(`    · ${event}`);
+
+			satisfied[dtString].push(`    · ${event.name}`);
 		}
+
+		let msg = '';
+		for (let dtString in satisfied) msg +=
+			`${dtString}\n${satisfied[dtString].join('\n')}\n\n`;
+
+		return msg.slice(0, -2);
+	} catch (e) {
+		if (isValidChannel(debugRoom2))
+			debugRoom2.send(`Error:${e}\n${e.stack}`);
+		Log.e(e + '\n' + e.stack);
+		return '';
 	}
-	
-	let msg = '';
-	for (let dtString in satisfied) msg +=
-		`${dtString}\n${satisfied[dtString].join('\n')}\n`;
-	
-	return msg.slice(0, -1);
 };
 
-let departmentList = [
+const departmentList = [
 	'회장', '부회장', '학생회', '생체부', '환경부', '통계부',
 	'문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'
 ];
 
-let delay = 10*1000;
+const delay = 10*1000;
 
 ////////////////////// 명령어 선언
 try {
@@ -417,8 +425,11 @@ bot.addCommand(new NaturalCommand.Builder()
 	.setExecute((self, chat, channel, { 학교행사, duration: { from, to } }) => {
 		if (chat.filteredText.replace(/\s+/g, '').length > 0)
 			return;
-		
-		let eventStr = getEvents(from, to);
+
+		let grade = 4
+		if (isNumber(channel.customName))
+			grade = DateTime.now().year - 2000 + 18 - parseInt(channel.customName, 10);
+		let eventStr = getEvents(from, to, grade);
 		let msg;
 		
 		if (eventStr.length > 0)
@@ -442,21 +453,22 @@ bot.addCommand(new NaturalCommand.Builder()
 			after: delay,
 		}
 	], (self, index, dt) => {
-		let eventStr;
-		
-		if (index === 0) {
-			eventStr = getEvents(dt, DateTime.sunday());
-		}
-		else if (index === 1) {
-			eventStr = getEvents(dt, dt);
-		}
-		
-		if (bot.isDebugMod)
-			debugRoom1.send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${eventStr}`);
-		else {
-			for (let 기수 in studentRooms) {
+		for (let generation in studentRooms) {
+			const grade = DateTime.now().year - 2000 + 18 - generation;
+			let eventStr;
+
+			if (index === 0) {
+				eventStr = getEvents(dt, DateTime.sunday(), grade);
+			}
+			else if (index === 1) {
+				eventStr = getEvents(dt, dt, grade);
+			}
+
+			if (bot.isDebugMod)
+				debugRoom1.send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${eventStr}`);
+			else {
 				if (eventStr.length > 0) {
-					studentRooms[기수].send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${eventStr}`);
+					studentRooms[generation].send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${eventStr}`);
 				}
 			}
 		}
@@ -484,7 +496,7 @@ bot.on(Event.MESSAGE, (chat, channel) => {
 bot.start();
 } catch (err) {
 	if (isValidChannel(debugRoom2))
-		debugRoom2.error(`봇 가동 중 오류가 발생했습니다.\n\n${err}\n${err.stack}`);
+		debugRoom2.send(`봇 가동 중 오류가 발생했습니다.\n\n${err}\n${err.stack}`);
 
 	Log.error(err + '\n' + err.stack);
 }

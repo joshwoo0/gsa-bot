@@ -17,6 +17,8 @@ function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("C
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
+var _require = require("../DateTime"),
+  DateTime = _require.DateTime;
 var _options = /*#__PURE__*/new WeakMap();
 var Connection = /*#__PURE__*/function () {
   function Connection(apiKey) {
@@ -33,15 +35,16 @@ var Connection = /*#__PURE__*/function () {
       var queries = [].concat(_toConsumableArray(_classPrivateFieldGet(_options, this)), _toConsumableArray(args)).map(function (opt) {
         return opt.join('=');
       }).join('&');
+      Log.i(queries);
       var doc = org.jsoup.Jsoup.connect("https://open.neis.go.kr/hub/".concat(url, "?").concat(queries)).get();
 
       // 에러 코드 처리
       var resultElements = doc.select('RESULT > CODE');
-      if (!resultElements.isEmpty() && !resultElements.text().equals('INFO-000')) throw new Error('Error code of resultElements: ' + resultElements.text());
+      if (!resultElements.isEmpty() && !String(resultElements.text()).includes('INFO')) throw new Error('Error code of resultElements: ' + resultElements.text());
 
       // 에러 코드 처리 2
       var headElements = doc.select('head > RESULT > CODE');
-      if (!headElements.isEmpty() && !headElements.text().equals('INFO-000')) throw new Error('Error code of headElements: ' + headElements.text());
+      if (!headElements.isEmpty() && !String(headElements.text()).includes('INFO-000')) throw new Error('Error code of headElements: ' + headElements.text());
       return doc.select('row');
     }
   }, {
@@ -58,7 +61,34 @@ var Connection = /*#__PURE__*/function () {
     }
   }, {
     key: "getEvents",
-    value: function getEvents() {}
+    value: function getEvents(from, to) {
+      var NEGLIGIBLE = ['휴업일'];
+      var elements = this.connect('SchoolSchedule', [['AA_FROM_YMD', from.toString('YYYYMMDD')], ['AA_TO_YMD', to.toString('YYYYMMDD')]]);
+      var events = [];
+      var _loop = function _loop() {
+        var element = elements.get(i);
+        var instDeductionNm = String(element.select('SBTR_DD_SC_NM').text());
+        if (NEGLIGIBLE.includes(instDeductionNm)) return 1; // continue
+        var name = String(element.select('EVENT_NM').text());
+        var isTargetGrade = ['ONE', 'TW', 'THREE'].map(function (g) {
+          return String(element.select("".concat(g, "_GRADE_EVENT_YN")).text()) === 'Y';
+        });
+        var date = String(element.select('AA_YMD').text());
+        var datetime = new DateTime();
+        datetime.year = parseInt(date.slice(0, 4), 10);
+        datetime.month = parseInt(date.slice(4, 6), 10);
+        datetime.day = parseInt(date.slice(6, 8), 10);
+        events.push({
+          name: name,
+          datetime: datetime,
+          isTargetGrade: isTargetGrade
+        });
+      };
+      for (var i = 0; i < elements.length; i++) {
+        if (_loop()) continue;
+      }
+      return events;
+    }
   }]);
 }();
 exports.Connection = Connection;

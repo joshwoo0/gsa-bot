@@ -104,100 +104,45 @@ var connection = new Connection(cache.get('apiKey'));
  */
 var getMeals = function getMeals(dt, bullet) {
   try {
-    var meals = connection.getMeals(dt).map(function (e) {
+    return connection.getMeals(dt).map(function (e) {
       return e.map(function (e) {
         return e === null ? null : bullet + e;
       }).join('\n');
     });
   } catch (e) {
-    if (isValidChannel(debugRoom2)) debugRoom2.send("Error:".concat(e, "\n").concat(e.stack));
+    if (isValidChannel(debugRoom2)) debugRoom2.send("\uBD07 \uAC00\uB3D9\uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD558\uC600\uC2B5\uB2C8\uB2E4\n\n".concat(e, "\n").concat(e.stack));
     Log.e(e + '\n' + e.stack);
     return [null, null, null];
   }
-  // let options = [
-  // 	['ATPT_OFCDC_SC_CODE', 'F10'],
-  // 	['SD_SCHUL_CODE', 7380031],
-  // 	['MLSV_YMD', dt.toString('YYMMDD')],
-  // 	['Type', 'xml']
-  // ];
-  //
-  // try {
-  // 	let doc = org.jsoup.Jsoup.connect(
-  // 		`https://open.neis.go.kr/hub/mealServiceDietInfo?${options.map(
-  // 			opt => opt.join('=')).join('&')}`).get();
-  //
-  // 	// 에러 코드 처리
-  // 	let resultElements = doc.select('RESULT > CODE');
-  // 	if (!resultElements.isEmpty() &&
-  // 	    !resultElements.text().equals('INFO-000')) {
-  //         Log.e('Error code of resultElements: ' + resultElements.text());
-  // 		return [null, null, null];
-  // 	}
-  //
-  // 	// 에러 코드 처리 2
-  // 	let headElements = doc.select('head > RESULT > CODE');
-  // 	if (!headElements.isEmpty() &&
-  // 	    !headElements.text().equals('INFO-000')) {
-  //         Log.e('Error code of headElements: ' + headElements.text());
-  // 		return [null, null, null];
-  // 	}
-  //
-  // 	let elements = doc.select('row');
-  // 	let meals = [null, null, null];
-  //
-  // 	for (let i = 0; i < elements.length; i++) {
-  // 		let element = elements.get(i);
-  // 		let mealType = String(element.select('MMEAL_SC_CODE').text());
-  //
-  // 		meals[mealType - 1] = String(element.select('DDISH_NM').text())
-  // 			.split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g)
-  // 			.filter(Boolean)
-  // 			.map(e => bullet + e)
-  // 			.join('\n');
-  // 	}
-  //
-  // 	return meals;
-  // } catch (e) {
-  // 	if (isValidChannel(logRoom))
-  // 		logRoom.send(`Error:${e}\n${e.stack}`);
-  //
-  // 	Log.e(e + '\n' + e.stack);
-  // 	return [null, null, null];
-  // }
 };
 
 /**
  * @param {DateTime} from
  * @param {DateTime} to
+ * @param {number} grade
  * @returns {string}
  */
-var getEvents = function getEvents(from, to) {
-  var events = Database.readObject('school_events.json');
-  var satisfied = {};
-  for (var date in events) {
-    var dt = DateTime.parse(date);
-    var dtString = dt.toString('M월 D일:');
-    if (from.le(dt) && dt.le(to)) {
+var getEvents = function getEvents(from, to, grade) {
+  try {
+    var events = connection.getEvents(from, to);
+    var satisfied = {};
+    for (var i = 0; i < events.length; i++) {
+      var event = events[i];
+      if (grade in [1, 2, 3] && !event.isTargetGrade[grade]) continue;
+      var dtString = event.datetime.toString('M월 D일:');
       if (!(dtString in satisfied)) {
         satisfied[dtString] = [];
       }
-      var _iterator = _createForOfIteratorHelper(events[date].split(/,\s+/)),
-        _step;
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var event = _step.value;
-          satisfied[dtString].push("    \xB7 ".concat(event));
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
+      satisfied[dtString].push("    \xB7 ".concat(event.name));
     }
+    var msg = '';
+    for (var _dtString in satisfied) msg += "".concat(_dtString, "\n").concat(satisfied[_dtString].join('\n'), "\n\n");
+    return msg.slice(0, -2);
+  } catch (e) {
+    if (isValidChannel(debugRoom2)) debugRoom2.send("Error:".concat(e, "\n").concat(e.stack));
+    Log.e(e + '\n' + e.stack);
+    return '';
   }
-  var msg = '';
-  for (var _dtString in satisfied) msg += "".concat(_dtString, "\n").concat(satisfied[_dtString].join('\n'), "\n");
-  return msg.slice(0, -1);
 };
 var departmentList = ['회장', '부회장', '학생회', '생체부', '환경부', '통계부', '문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'];
 var delay = 10 * 1000;
@@ -377,11 +322,11 @@ try {
       });
     } else {
       // 공지 전송
-      var _iterator2 = _createForOfIteratorHelper(기수),
-        _step2;
+      var _iterator = _createForOfIteratorHelper(기수),
+        _step;
       try {
         var _loop = function _loop() {
-            var n = _step2.value;
+            var n = _step.value;
             if (!studentRooms[n]) {
               channel.warn("".concat(n, "\uAE30 \uD1A1\uBC29\uC740 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
               return 0; // continue
@@ -397,14 +342,14 @@ try {
             });
           },
           _ret;
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           _ret = _loop();
           if (_ret === 0) continue;
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator.e(err);
       } finally {
-        _iterator2.f();
+        _iterator.f();
       }
     }
   }).build());
@@ -446,7 +391,9 @@ try {
       from = _ref6$duration.from,
       to = _ref6$duration.to;
     if (chat.filteredText.replace(/\s+/g, '').length > 0) return;
-    var eventStr = getEvents(from, to);
+    var grade = 4;
+    if (isNumber(channel.customName)) grade = DateTime.now().year - 2000 + 18 - parseInt(channel.customName, 10);
+    var eventStr = getEvents(from, to, grade);
     var msg;
     if (eventStr.length > 0) msg = "".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n").concat(eventStr);else msg = "".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.");
     if (bot.isDebugMod) debugRoom1.send(msg);else channel.send(msg);
@@ -459,16 +406,17 @@ try {
     comment: '월요일을 제외한 모든 요일의 자정에는 그 날의 일정을 전송',
     after: delay
   }], function (self, index, dt) {
-    var eventStr;
-    if (index === 0) {
-      eventStr = getEvents(dt, DateTime.sunday());
-    } else if (index === 1) {
-      eventStr = getEvents(dt, dt);
-    }
-    if (bot.isDebugMod) debugRoom1.send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(eventStr));else {
-      for (var 기수 in studentRooms) {
+    for (var generation in studentRooms) {
+      var grade = DateTime.now().year - 2000 + 18 - generation;
+      var eventStr = void 0;
+      if (index === 0) {
+        eventStr = getEvents(dt, DateTime.sunday(), grade);
+      } else if (index === 1) {
+        eventStr = getEvents(dt, dt, grade);
+      }
+      if (bot.isDebugMod) debugRoom1.send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(eventStr));else {
         if (eventStr.length > 0) {
-          studentRooms[기수].send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(eventStr));
+          studentRooms[generation].send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(eventStr));
         }
       }
     }
@@ -493,6 +441,6 @@ try {
   ////////////////////// 봇 가동 시작
   bot.start();
 } catch (err) {
-  if (isValidChannel(debugRoom2)) debugRoom2.error("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err, "\n").concat(err.stack));
+  if (isValidChannel(debugRoom2)) debugRoom2.send("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err, "\n").concat(err.stack));
   Log.error(err + '\n' + err.stack);
 }
