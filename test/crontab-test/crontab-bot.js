@@ -2,7 +2,7 @@ let BotOperator = require('../../global_modules/BotOperator').from(BotManager);
 var Jsoup = org.jsoup.Jsoup;
 let bot = BotOperator.getCurrentBot();
 let { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/BotOperator/Command');
-let { DateTime } = require('../../global_modules/BotOperator/DateTime');
+let { DateTime } = require('../../global_modules/BotOperator/Datetime');
 
 let staffRoom = BotOperator.getChannelById('412937930061983');	// 학생회 임원방
 let debugRoom1 = BotOperator.getChannelById('413027239498239');	// 디버그방1

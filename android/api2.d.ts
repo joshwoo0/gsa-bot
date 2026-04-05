@@ -124,7 +124,7 @@ namespace Event {
         export const START = 'activityStart';
         export const STOP = 'activityStop';
     }
-    export const COMMAND = 'command';
+    export const COMMAND = 'Command';
     export const MESSAGE = 'message';
     export const NOTIFICATION_POSTED = 'notificationPosted';
     export const START_COMPILE = 'startCompile';

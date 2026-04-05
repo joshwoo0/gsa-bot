@@ -6,7 +6,7 @@ const xml2js = require('xml2js');
 ///////////////////////////////////////
 
 const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../global_modules/BotOperator/Command/index');
-const { DateTime } = require('../global_modules/BotOperator/DateTime');
+const { DateTime } = require('../global_modules/BotOperator/Datetime');
 const { isNumber, isValidChannel, compress } = require('../global_modules/BotOperator/util');
 const bot = new Bot();
 

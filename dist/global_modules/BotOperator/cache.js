@@ -32,29 +32,66 @@ var FS = _objectSpread(_objectSpread({}, FileStream), {}, {
     return JSON.parse((_FileStream$read = FileStream.read(path)) !== null && _FileStream$read !== void 0 ? _FileStream$read : JSON.stringify(defaultValue));
   }
 });
-var _channel2Id = /*#__PURE__*/new WeakMap();
-var _id2Channel = /*#__PURE__*/new WeakMap();
 var _fileStream = /*#__PURE__*/new WeakMap();
 var _path = /*#__PURE__*/new WeakMap();
 var _botOperator = /*#__PURE__*/new WeakMap();
+var Cache = /*#__PURE__*/function () {
+  function Cache(fileStream, path, botOperator) {
+    _classCallCheck(this, Cache);
+    _classPrivateFieldInitSpec(this, _fileStream, void 0);
+    _classPrivateFieldInitSpec(this, _path, void 0);
+    _classPrivateFieldInitSpec(this, _botOperator, void 0);
+    _defineProperty(this, "data", void 0);
+    _classPrivateFieldSet(_fileStream, this, fileStream);
+    _classPrivateFieldSet(_path, this, path);
+    _classPrivateFieldSet(_botOperator, this, botOperator);
+    this.data = {};
+  }
+  return _createClass(Cache, [{
+    key: "load",
+    value: function load() {
+      this.data = _classPrivateFieldGet(_fileStream, this).readObject(_classPrivateFieldGet(_path, this), {});
+    }
+  }, {
+    key: "push",
+    value: function push(key, data) {
+      this.data[key] = data;
+    }
+  }, {
+    key: "get",
+    value: function get(key) {
+      return this.data[key];
+    }
+  }, {
+    key: "dump",
+    value: function dump() {
+      _classPrivateFieldGet(_fileStream, this).writeObject(_classPrivateFieldGet(_path, this), this.data);
+    }
+  }]);
+}();
+var _channel2Id = /*#__PURE__*/new WeakMap();
+var _id2Channel = /*#__PURE__*/new WeakMap();
+var _fileStream2 = /*#__PURE__*/new WeakMap();
+var _path2 = /*#__PURE__*/new WeakMap();
+var _botOperator2 = /*#__PURE__*/new WeakMap();
 var ChannelCache = /*#__PURE__*/function () {
   function ChannelCache(fileStream, path, botOperator) {
     _classCallCheck(this, ChannelCache);
     _classPrivateFieldInitSpec(this, _channel2Id, {});
     _classPrivateFieldInitSpec(this, _id2Channel, {});
-    _classPrivateFieldInitSpec(this, _fileStream, void 0);
-    _classPrivateFieldInitSpec(this, _path, void 0);
-    _classPrivateFieldInitSpec(this, _botOperator, void 0);
-    _classPrivateFieldSet(_fileStream, this, fileStream);
-    _classPrivateFieldSet(_path, this, path);
-    _classPrivateFieldSet(_botOperator, this, botOperator);
+    _classPrivateFieldInitSpec(this, _fileStream2, void 0);
+    _classPrivateFieldInitSpec(this, _path2, void 0);
+    _classPrivateFieldInitSpec(this, _botOperator2, void 0);
+    _classPrivateFieldSet(_fileStream2, this, fileStream);
+    _classPrivateFieldSet(_path2, this, path);
+    _classPrivateFieldSet(_botOperator2, this, botOperator);
   }
   return _createClass(ChannelCache, [{
     key: "load",
     value: function load() {
       var rooms = {};
       var studentRooms = {};
-      var _classPrivateFieldGet2 = _classPrivateFieldGet(_fileStream, this).readObject(_classPrivateFieldGet(_path, this), {
+      var _classPrivateFieldGet2 = _classPrivateFieldGet(_fileStream2, this).readObject(_classPrivateFieldGet(_path2, this), {
           i2c: {},
           c2i: {}
         }),
@@ -64,7 +101,7 @@ var ChannelCache = /*#__PURE__*/function () {
         var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
           name = _Object$entries$_i[0],
           id = _Object$entries$_i[1];
-        var ch = _classPrivateFieldGet(_botOperator, this).getChannelById(id);
+        var ch = _classPrivateFieldGet(_botOperator2, this).getChannelById(id);
         if (ch == null) continue;
         _classPrivateFieldGet(_channel2Id, this)[name] = id;
         _classPrivateFieldGet(_id2Channel, this)[id] = name;
@@ -90,10 +127,7 @@ var ChannelCache = /*#__PURE__*/function () {
   }, {
     key: "dump",
     value: function dump() {
-      _classPrivateFieldGet(_fileStream, this).writeObject(_classPrivateFieldGet(_path, this), {
-        c2i: _classPrivateFieldGet(_channel2Id, this),
-        i2c: _classPrivateFieldGet(_id2Channel, this)
-      });
+      _classPrivateFieldGet(_fileStream2, this).writeObject(_classPrivateFieldGet(_path2, this), this.data());
     }
   }, {
     key: "has",
@@ -111,4 +145,5 @@ var ChannelCache = /*#__PURE__*/function () {
   }]);
 }();
 exports.FS = FS;
+exports.Cache = Cache;
 exports.ChannelCache = ChannelCache;

@@ -2,7 +2,7 @@ const { DBManager } = require('./DBManager');
 const { CronJob } = require('./CronJob');
 const { Event } = require('./Event');
 const { CommandRegistry, StructuredCommand, Command } = require('./Command');
-const { DateTime } = require('./DateTime');
+const { DateTime } = require('./Datetime');
 const { isValidChannel, compress } = require('./util');
 
 const IS_DIST = false;
@@ -117,7 +117,7 @@ try {
         
         on(event, listener) {
             if (!Object.values(Event).includes(event)) {
-                throw new Error('Invalid event');
+                throw new Error('Invalid Event');
             }
 
             switch (event) {
@@ -141,7 +141,7 @@ try {
 
         off(event, listener) {
             if (!Object.values(Event).includes(event)) {
-                throw new Error('Invalid event');
+                throw new Error('Invalid Event');
             }
 
             // TODO: Event.COMMAND는 여러 리스너 공통임. 따로 안 됨 매뉴얼에 적기

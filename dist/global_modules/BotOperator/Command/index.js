@@ -29,7 +29,7 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var _require = require('../DateTime'),
+var _require = require('../Datetime'),
   DateTime = _require.DateTime;
 var _require2 = require('../util'),
   isValidChannel = _require2.isValidChannel;
@@ -715,7 +715,7 @@ try {
       key: "register",
       value: function register(command, logRoom) {
         var _this9 = this;
-        if (!(command instanceof Command)) throw new TypeError("command must be instance of Command. maybe you forgot to use 'build' method?");
+        if (!(command instanceof Command)) throw new TypeError("Command must be instance of Command. maybe you forgot to use 'build' method?");
         var _iterator4 = _createForOfIteratorHelper(this.data),
           _step4;
         try {

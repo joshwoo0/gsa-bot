@@ -13,7 +13,7 @@ parseDuration = function parseDuration(string) {
   console.log("".concat(parsed.from, " ~ ").concat(parsed.to));
 };
 
-// console.log(DateTime.now().gt({ year: 2024, month: 7, day: 7 }));
+// console.log(Datetime.now().gt({ year: 2024, month: 7, day: 7 }));
 
 // parse`새벽 3시`    // ✅
 // parse`오전 4시`    // ✅
@@ -108,6 +108,6 @@ parseDuration = function parseDuration(string) {
 // parseDuration`오늘부터 이번주 일요일까지`	// ✅
 
 // 기준 날짜에서 다시 parse
-// datetime = DateTime.parse('이번주 일요일');
-// console.log(datetime.toString());
-// console.log(datetime.parse('3일 후').toString());	// 이번주 일요일에서 3일 후 ✅
+// Datetime = Datetime.parse('이번주 일요일');
+// console.log(Datetime.toString());
+// console.log(Datetime.parse('3일 후').toString());	// 이번주 일요일에서 3일 후 ✅

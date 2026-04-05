@@ -1,6 +1,6 @@
 import { Channel, Chat } from "../DBManager/classes";
 import { CronJobFactor } from "../CronJob/cron-job-manager/lib/cron-job-factor";
-import { DateTime, Duration } from "../DateTime";
+import { DateTime, Duration } from "../Datetime";
 
 type ChatWithFiltered = { [K in keyof Chat]: Chat[K] } & { filteredText: string };
 

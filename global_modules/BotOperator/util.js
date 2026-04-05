@@ -45,6 +45,19 @@ const getChannelName = (channel) => {
 
 }
 
+class Logger {
+
+    #debugRoom
+
+    constructor(debugRoom) {
+        this.#debugRoom = debugRoom;
+    }
+
+    message(level, msg) {
+
+    }
+}
+
 exports.isNumber = name => /^\d+$/.test(name);
 exports.isNaN = n => Number.isNaN(n);
 exports.compress = '\u200b'.repeat(500);
@@ -53,3 +66,4 @@ exports.isValidChannel = channel => channel != null && channel.send != null;
 exports.shortURL = shortURL;
 exports.prettyBytes = prettyBytes;
 exports.prettyDuration = prettyDuration;
+exports.Logger = Logger;

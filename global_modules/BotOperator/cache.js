@@ -6,6 +6,36 @@ const FS = {
         FileStream.read(path) ?? JSON.stringify(defaultValue)),
 };
 
+class Cache {
+    #fileStream
+    #path
+    #botOperator
+    data
+
+    constructor(fileStream, path, botOperator) {
+        this.#fileStream = fileStream;
+        this.#path = path;
+        this.#botOperator = botOperator;
+        this.data = {}
+    }
+
+    load() {
+        this.data = this.#fileStream.readObject(this.#path, {});
+    }
+
+    push(key, data) {
+        this.data[key] = data
+    }
+
+    get(key) {
+        return this.data[key];
+    }
+
+    dump() {
+        this.#fileStream.writeObject(this.#path, this.data);
+    }
+}
+
 class ChannelCache {
     #channel2Id = {}
     #id2Channel = {}
@@ -51,10 +81,7 @@ class ChannelCache {
     }
 
     dump() {
-        this.#fileStream.writeObject(this.#path, {
-            c2i: this.#channel2Id,
-            i2c: this.#id2Channel,
-        });
+        this.#fileStream.writeObject(this.#path, this.data());
     }
 
     has(channel) {
@@ -67,4 +94,5 @@ class ChannelCache {
 }
 
 exports.FS = FS
+exports.Cache = Cache
 exports.ChannelCache = ChannelCache

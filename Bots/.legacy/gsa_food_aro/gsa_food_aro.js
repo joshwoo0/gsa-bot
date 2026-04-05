@@ -118,7 +118,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             replier.reply(textsend);
 
             // try {
-            //     result = iamschool_menu(Y, command);
+            //     result = iamschool_menu(Y, Command);
             //     if(result[1]) replier.reply(result[0]);
             //     else {
             //         let time_type;

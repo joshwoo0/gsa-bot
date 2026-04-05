@@ -1,7 +1,7 @@
 const bot = BotManager.getCurrentBot();
 var Jsoup = org.jsoup.Jsoup;
 let { CronJob } = require('../../global_modules/BotOperator/CronJob');
-let { DateTime } = require('../../global_modules/BotOperator/DateTime');
+let { DateTime } = require('../../global_modules/BotOperator/Datetime');
 CronJob.setWakeLock(true);
 
 let getMeals = (dt, bullet) => {
@@ -55,7 +55,7 @@ let getMeals = (dt, bullet) => {
 };
 
 // CronJob.add("* * * * *", () => {
-//     let dt = DateTime.now();
+//     let dt = Datetime.now();
 //     Log.info("after: " + dt);
 // }, { before: -1*1000 });
 
@@ -71,17 +71,17 @@ CronJob.add("* * * * *", () => {
 }, { before: 1*1000 });
 
 // CronJob.add("*/2 * * * *", () => {
-//     let dt = DateTime.now();
+//     let dt = Datetime.now();
 //     Log.info("1: " + dt);
 // });
 
 // CronJob.add("*/3 * * * *", () => {
-//     let dt = DateTime.now();
+//     let dt = Datetime.now();
 //     Log.info("2: " + dt);
 // });
 
 // CronJob.add("* * * * *", () => {
-//     let dt = DateTime.now();
+//     let dt = Datetime.now();
     // Log.info("3: pong");
 // });
 

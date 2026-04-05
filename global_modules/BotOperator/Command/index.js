@@ -1,4 +1,4 @@
-let { DateTime } = require('../DateTime');
+let { DateTime } = require('../Datetime');
 let { isValidChannel } = require('../util');
 let { compress } = require('../util');
 require('../util');
@@ -715,7 +715,7 @@ class Registry {
 	 */
 	register(command, logRoom) {
 		if (!(command instanceof Command))	
-			throw new TypeError("command must be instance of Command. maybe you forgot to use 'build' method?");
+			throw new TypeError("Command must be instance of Command. maybe you forgot to use 'build' method?");
 
 		for (let cmd of this.data) {
 			if (cmd.name === command.name)

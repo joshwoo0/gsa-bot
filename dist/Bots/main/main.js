@@ -25,7 +25,7 @@ var _require = require('BotOperator/Command'),
   CommandRegistry = _require.CommandRegistry;
 var _require2 = require('BotOperator/Event'),
   Event = _require2.Event;
-var _require3 = require('BotOperator/DateTime'),
+var _require3 = require('BotOperator/Datetime'),
   DateTime = _require3.DateTime;
 var _require4 = require('BotOperator/DBManager/classes'),
   Channel = _require4.Channel;
@@ -39,7 +39,9 @@ var _require5 = require('BotOperator/util'),
 var _require6 = require('BotOperator/cache'),
   FS = _require6.FS,
   ChannelCache = _require6.ChannelCache,
-  UserCache = _require6.UserCache;
+  Cache = _require6.Cache;
+var _require7 = require('BotOperator/API'),
+  Connection = _require7.Connection;
 if (!Object.entries) {
   Object.entries = function (obj) {
     var ownProps = Object.keys(obj),
@@ -58,9 +60,12 @@ var bot = BotOperator.getCurrentBot();
 
 ////////////////////// 파일 스트림 객체
 var paths = {
+  cache: '/sdcard/msgbot/cache.json',
   channels: '/sdcard/msgbot/channels.json'
 };
+var cache = new Cache(FS, paths.cache, BotOperator);
 var channelCache = new ChannelCache(FS, paths.channels, BotOperator);
+cache.load();
 
 ////////////////////// 채널 등록
 var staffRoom = BotOperator.getChannelById('440996701585996'); // 학생회 임원방
@@ -91,46 +96,74 @@ Channel.prototype.info = function (msg) {
 };
 
 ////////////////////// 사용자 변수
+var connection = new Connection(cache.get('apiKey'));
 /**
  * @param {DateTime} dt
  * @param {String} bullet
  * @return {String[]}
  */
 var getMeals = function getMeals(dt, bullet) {
-  var options = [['ATPT_OFCDC_SC_CODE', 'F10'], ['SD_SCHUL_CODE', 7380031], ['MLSV_YMD', dt.toString('YYMMDD')], ['Type', 'xml']];
   try {
-    var doc = org.jsoup.Jsoup.connect("https://open.neis.go.kr/hub/mealServiceDietInfo?".concat(options.map(function (opt) {
-      return opt.join('=');
-    }).join('&'))).get();
-
-    // 에러 코드 처리
-    var resultElements = doc.select('RESULT > CODE');
-    if (!resultElements.isEmpty() && !resultElements.text().equals('INFO-000')) {
-      Log.e('Error code of resultElements: ' + resultElements.text());
-      return [null, null, null];
-    }
-
-    // 에러 코드 처리 2
-    var headElements = doc.select('head > RESULT > CODE');
-    if (!headElements.isEmpty() && !headElements.text().equals('INFO-000')) {
-      Log.e('Error code of headElements: ' + headElements.text());
-      return [null, null, null];
-    }
-    var elements = doc.select('row');
-    var meals = [null, null, null];
-    for (var i = 0; i < elements.length; i++) {
-      var element = elements.get(i);
-      var mealType = String(element.select('MMEAL_SC_CODE').text());
-      meals[mealType - 1] = String(element.select('DDISH_NM').text()).split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g).filter(Boolean).map(function (e) {
-        return bullet + e;
+    var meals = connection.getMeals(dt).map(function (e) {
+      return e.map(function (e) {
+        return e === null ? null : bullet + e;
       }).join('\n');
-    }
-    return meals;
+    });
   } catch (e) {
-    if (isValidChannel(logRoom)) logRoom.send("Error:".concat(e, "\n").concat(e.stack));
+    if (isValidChannel(debugRoom2)) debugRoom2.send("Error:".concat(e, "\n").concat(e.stack));
     Log.e(e + '\n' + e.stack);
     return [null, null, null];
   }
+  // let options = [
+  // 	['ATPT_OFCDC_SC_CODE', 'F10'],
+  // 	['SD_SCHUL_CODE', 7380031],
+  // 	['MLSV_YMD', dt.toString('YYMMDD')],
+  // 	['Type', 'xml']
+  // ];
+  //
+  // try {
+  // 	let doc = org.jsoup.Jsoup.connect(
+  // 		`https://open.neis.go.kr/hub/mealServiceDietInfo?${options.map(
+  // 			opt => opt.join('=')).join('&')}`).get();
+  //
+  // 	// 에러 코드 처리
+  // 	let resultElements = doc.select('RESULT > CODE');
+  // 	if (!resultElements.isEmpty() &&
+  // 	    !resultElements.text().equals('INFO-000')) {
+  //         Log.e('Error code of resultElements: ' + resultElements.text());
+  // 		return [null, null, null];
+  // 	}
+  //
+  // 	// 에러 코드 처리 2
+  // 	let headElements = doc.select('head > RESULT > CODE');
+  // 	if (!headElements.isEmpty() &&
+  // 	    !headElements.text().equals('INFO-000')) {
+  //         Log.e('Error code of headElements: ' + headElements.text());
+  // 		return [null, null, null];
+  // 	}
+  //
+  // 	let elements = doc.select('row');
+  // 	let meals = [null, null, null];
+  //
+  // 	for (let i = 0; i < elements.length; i++) {
+  // 		let element = elements.get(i);
+  // 		let mealType = String(element.select('MMEAL_SC_CODE').text());
+  //
+  // 		meals[mealType - 1] = String(element.select('DDISH_NM').text())
+  // 			.split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g)
+  // 			.filter(Boolean)
+  // 			.map(e => bullet + e)
+  // 			.join('\n');
+  // 	}
+  //
+  // 	return meals;
+  // } catch (e) {
+  // 	if (isValidChannel(logRoom))
+  // 		logRoom.send(`Error:${e}\n${e.stack}`);
+  //
+  // 	Log.e(e + '\n' + e.stack);
+  // 	return [null, null, null];
+  // }
 };
 
 /**
@@ -166,7 +199,7 @@ var getEvents = function getEvents(from, to) {
   for (var _dtString in satisfied) msg += "".concat(_dtString, "\n").concat(satisfied[_dtString].join('\n'), "\n");
   return msg.slice(0, -1);
 };
-var 부서명List = ['회장', '부회장', '학생회', '생체부', '환경부', '통계부', '문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'];
+var departmentList = ['회장', '부회장', '학생회', '생체부', '환경부', '통계부', '문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'];
 var delay = 10 * 1000;
 
 ////////////////////// 명령어 선언
@@ -205,8 +238,8 @@ try {
   }).setUseDateParse(0, false, false).setExecute(function (self, chat, channel, _ref2) {
     var 급식 = _ref2.급식,
       datetime = _ref2.datetime;
-    // if (isNaN(datetime)) {
-    // 	datetime = DateTime.now();
+    // if (isNaN(Datetime)) {
+    // 	Datetime = Datetime.now();
     // }
 
     // 급식의 토큰이 시간의 의미도 동시에 갖는 경우를 처리
@@ -304,13 +337,13 @@ try {
   }).build());
 
   ////////////////////// 공지 명령어
-  bot.addCommand(new StructuredCommand.Builder().setName('공지', '📢').setDescription("\uD559\uC0DD\uD68C \uACF5\uC9C0\uB97C \uC804\uC1A1\uD569\uB2C8\uB2E4. \uAE30\uC218\uB97C \uC9C0\uC815\uD558\uC9C0 \uC54A\uC73C\uBA74 \uC7AC\uD559 \uC911\uC778 \uAE30\uC218 \uD1A1\uBC29\uC5D0 \uC804\uC1A1\uB429\uB2C8\uB2E4.\n\uBA3C\uC800 \uC785\uB825 \uC591\uC2DD\uC5D0 \uB9DE\uCDB0 \uBA85\uB839\uC5B4\uB97C \uC791\uC131\uD574 \uC804\uC1A1\uD55C \uB4A4, \uACF5\uC9C0\uC0AC\uD56D(\uBA54\uC2DC\uC9C0, \uC0AC\uC9C4, \uC601\uC0C1, \uD30C\uC77C)\uC744 \uC791\uC131\uD574 \uD55C \uBC88 \uB354 \uC804\uC1A1\uD558\uC138\uC694.\n\uACF5\uC9C0\uC0AC\uD56D \uB0B4\uC6A9 \uB300\uC2E0 \uBA54\uC2DC\uC9C0\uB85C '\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0BC \uACBD\uC6B0 \uACF5\uC9C0 \uBA85\uB839\uC5B4\uAC00 \uC911\uB2E8\uB429\uB2C8\uB2E4.\n<\uBD80\uC11C>\uC5D0\uB294 \uB2E4\uC74C\uACFC \uAC19\uC740 \uBB38\uC790\uC5F4\uC774 \uB4E4\uC5B4\uAC11\uB2C8\uB2E4. ".concat(부서명List.join(', '))).setUsage("<\uBD80\uC11C:str> \uC54C\uB9BC <\uAE30\uC218:int[]? min=".concat(DateTime.now().year - 2000 + 15, " max=").concat(DateTime.now().year - 2000 + 17, ">")).setChannels(staffRoom).setExamples(['$user: 생체부 알림', '봇: $user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.', '$user: 기숙사 3월 기상곡입니다 ...'], ['$user: 정책부 알림 39', '봇: $user님, 39기에 정책부로서 공지할 내용을 작성해주세요.', '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'], ['$user: 홍보부 알림 40 41', '봇: $user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.', '$user: 취소', '봇: 취소되었습니다.']).setExecute(function (self, chat, channel, _ref3) {
+  bot.addCommand(new StructuredCommand.Builder().setName('공지', '📢').setDescription("\uD559\uC0DD\uD68C \uACF5\uC9C0\uB97C \uC804\uC1A1\uD569\uB2C8\uB2E4. \uAE30\uC218\uB97C \uC9C0\uC815\uD558\uC9C0 \uC54A\uC73C\uBA74 \uC7AC\uD559 \uC911\uC778 \uAE30\uC218 \uD1A1\uBC29\uC5D0 \uC804\uC1A1\uB429\uB2C8\uB2E4.\n\uBA3C\uC800 \uC785\uB825 \uC591\uC2DD\uC5D0 \uB9DE\uCDB0 \uBA85\uB839\uC5B4\uB97C \uC791\uC131\uD574 \uC804\uC1A1\uD55C \uB4A4, \uACF5\uC9C0\uC0AC\uD56D(\uBA54\uC2DC\uC9C0, \uC0AC\uC9C4, \uC601\uC0C1, \uD30C\uC77C)\uC744 \uC791\uC131\uD574 \uD55C \uBC88 \uB354 \uC804\uC1A1\uD558\uC138\uC694.\n\uACF5\uC9C0\uC0AC\uD56D \uB0B4\uC6A9 \uB300\uC2E0 \uBA54\uC2DC\uC9C0\uB85C '\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0BC \uACBD\uC6B0 \uACF5\uC9C0 \uBA85\uB839\uC5B4\uAC00 \uC911\uB2E8\uB429\uB2C8\uB2E4.\n<\uBD80\uC11C>\uC5D0\uB294 \uB2E4\uC74C\uACFC \uAC19\uC740 \uBB38\uC790\uC5F4\uC774 \uB4E4\uC5B4\uAC11\uB2C8\uB2E4. ".concat(departmentList.join(', '))).setUsage("<\uBD80\uC11C:str> \uC54C\uB9BC <\uAE30\uC218:int[]? min=".concat(DateTime.now().year - 2000 + 15, " max=").concat(DateTime.now().year - 2000 + 17, ">")).setChannels(staffRoom).setExamples(['$user: 생체부 알림', '봇: $user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.', '$user: 기숙사 3월 기상곡입니다 ...'], ['$user: 정책부 알림 39', '봇: $user님, 39기에 정책부로서 공지할 내용을 작성해주세요.', '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'], ['$user: 홍보부 알림 40 41', '봇: $user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.', '$user: 취소', '봇: 취소되었습니다.']).setExecute(function (self, chat, channel, _ref3) {
     var 부서 = _ref3.부서,
       기수 = _ref3.기수;
-    debugRoom1.send('notification checkpoint 1');
+    if (bot.isDebugMod) debugRoom1.send('notification checkpoint 1');
     // 부서가 적절한지 확인
-    if (!부서명List.includes(부서)) {
-      channel.warn("".concat(부서.은는, " \uC801\uC808\uD55C \uBD80\uC11C\uAC00 \uC544\uB2D9\uB2C8\uB2E4.\n\n\uAC00\uB2A5\uD55C \uBD80\uC11C: ").concat(부서명List.join(', ')));
+    if (!departmentList.includes(부서)) {
+      channel.warn("".concat(부서.은는, " \uC801\uC808\uD55C \uBD80\uC11C\uAC00 \uC544\uB2D9\uB2C8\uB2E4.\n\n\uAC00\uB2A5\uD55C \uBD80\uC11C: ").concat(departmentList.join(', ')));
       return;
     }
 
@@ -404,7 +437,7 @@ try {
   }).build());
 
   ////////////////////// 학사일정 명령어
-  bot.addCommand(new NaturalCommand.Builder().setName('일정', '📅').setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.').setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사').setUseDateParse(0, true).setQuery({
+  bot.addCommand(new NaturalCommand.Builder().setName('일정', '📅').setDescription('학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.').setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사').setUseDateParse(0, true).setQuery({
     학교행사: null,
     duration: null
   }).setExecute(function (self, chat, channel, _ref6) {
@@ -445,7 +478,6 @@ try {
   bot.on(Event.MESSAGE, function (chat, channel) {
     if (!isNumber(channel.customName)) {
       // 기수 톡방 검열
-      debugRoom1.send('43 인식 checkpoint');
       return;
     }
 
@@ -461,6 +493,6 @@ try {
   ////////////////////// 봇 가동 시작
   bot.start();
 } catch (err) {
-  if (isValidChannel(logRoom)) logRoom.error("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err, "\n").concat(err.stack));
+  if (isValidChannel(debugRoom2)) debugRoom2.error("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err, "\n").concat(err.stack));
   Log.error(err + '\n' + err.stack);
 }

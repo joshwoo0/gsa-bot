@@ -16,10 +16,11 @@
 ////////////////////// 모듈 불러오기
 const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/BotOperator/Command');
 const { Event } = require('../../global_modules/BotOperator/Event');
-const { DateTime } = require('../../global_modules/BotOperator/DateTime');
+const { DateTime } = require('../../global_modules/BotOperator/Datetime');
 const { Channel } = require('../../global_modules/BotOperator/DBManager/classes');
 const { isNumber, isValidChannel, compress, shortURL, prettyBytes, prettyDuration } = require('../../global_modules/BotOperator/util');
-const { FS, ChannelCache, UserCache } = require('../../global_modules/BotOperator/cache');
+const { FS, ChannelCache, Cache } = require('../../global_modules/BotOperator/cache');
+const { Connection } = require('../../global_modules/BotOperator/API');
 if (!Object.entries) {
 	Object.entries = function(obj) {
 		let ownProps = Object.keys(obj),
@@ -38,9 +39,12 @@ const bot = BotOperator.getCurrentBot();
 
 ////////////////////// 파일 스트림 객체
 let paths = {
+	cache: '/sdcard/msgbot/cache.json',
 	channels: '/sdcard/msgbot/channels.json',
 };
+let cache = new Cache(FS, paths.cache, BotOperator);
 let channelCache = new ChannelCache(FS, paths.channels, BotOperator);
+cache.load()
 
 ////////////////////// 채널 등록
 let staffRoom = BotOperator.getChannelById('440996701585996');	// 학생회 임원방
@@ -69,58 +73,21 @@ Channel.prototype.info = function (msg) {
 }
 
 ////////////////////// 사용자 변수
+const connection = new Connection(cache.get('apiKey'))
 /**
  * @param {DateTime} dt
  * @param {String} bullet
  * @return {String[]}
  */
 let getMeals = (dt, bullet) => {
-	let options = [
-		['ATPT_OFCDC_SC_CODE', 'F10'],
-		['SD_SCHUL_CODE', 7380031],
-		['MLSV_YMD', dt.toString('YYMMDD')],
-		['Type', 'xml']
-	];
-	
 	try {
-		let doc = org.jsoup.Jsoup.connect(
-			`https://open.neis.go.kr/hub/mealServiceDietInfo?${options.map(
-				opt => opt.join('=')).join('&')}`).get();
-		
-		// 에러 코드 처리
-		let resultElements = doc.select('RESULT > CODE');
-		if (!resultElements.isEmpty() &&
-		    !resultElements.text().equals('INFO-000')) {
-            Log.e('Error code of resultElements: ' + resultElements.text());
-			return [null, null, null];
-		}
-		
-		// 에러 코드 처리 2
-		let headElements = doc.select('head > RESULT > CODE');
-		if (!headElements.isEmpty() &&
-		    !headElements.text().equals('INFO-000')) {
-            Log.e('Error code of headElements: ' + headElements.text());
-			return [null, null, null];
-		}
-		
-		let elements = doc.select('row');
-		let meals = [null, null, null];
-		
-		for (let i = 0; i < elements.length; i++) {
-			let element = elements.get(i);
-			let mealType = String(element.select('MMEAL_SC_CODE').text());
-
-			meals[mealType - 1] = String(element.select('DDISH_NM').text())
-				.split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g)
-				.filter(Boolean)
-				.map(e => bullet + e)
-				.join('\n');
-		}
-
-		return meals;
+		return connection.getMeals(dt)
+			.map(e =>
+				e.map(e => e === null ? null : bullet + e).join('\n')
+			)
 	} catch (e) {
-		if (isValidChannel(logRoom))
-			logRoom.send(`Error:${e}\n${e.stack}`);
+		if (isValidChannel(debugRoom2))
+			debugRoom2.send(`Error:${e}\n${e.stack}`);
 
 		Log.e(e + '\n' + e.stack);
 		return [null, null, null];
@@ -157,7 +124,7 @@ let getEvents = (from, to) => {
 	return msg.slice(0, -1);
 };
 
-let 부서명List = [
+let departmentList = [
 	'회장', '부회장', '학생회', '생체부', '환경부', '통계부',
 	'문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'
 ];
@@ -215,8 +182,8 @@ bot.addCommand(new NaturalCommand.Builder()
 	})
 	.setUseDateParse(0, false, false)
 	.setExecute((self, chat, channel, { 급식, datetime }) => {
-		// if (isNaN(datetime)) {
-		// 	datetime = DateTime.now();
+		// if (isNaN(Datetime)) {
+		// 	Datetime = Datetime.now();
 		// }
 
 		// 급식의 토큰이 시간의 의미도 동시에 갖는 경우를 처리
@@ -313,7 +280,7 @@ bot.addCommand(new NaturalCommand.Builder()
 ////////////////////// 공지 명령어
 bot.addCommand(new StructuredCommand.Builder()
 	.setName('공지', '📢')
-	.setDescription(`학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항(메시지, 사진, 영상, 파일)을 작성해 한 번 더 전송하세요.\n공지사항 내용 대신 메시지로 \'취소\'라고 보낼 경우 공지 명령어가 중단됩니다.\n<부서>에는 다음과 같은 문자열이 들어갑니다. ${부서명List.join(', ')}`)
+	.setDescription(`학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항(메시지, 사진, 영상, 파일)을 작성해 한 번 더 전송하세요.\n공지사항 내용 대신 메시지로 \'취소\'라고 보낼 경우 공지 명령어가 중단됩니다.\n<부서>에는 다음과 같은 문자열이 들어갑니다. ${departmentList.join(', ')}`)
 	.setUsage(`<부서:str> 알림 <기수:int[]? min=${DateTime.now().year - 2000 + 15} max=${DateTime.now().year - 2000 + 17}>`)
 	.setChannels(staffRoom)
 	.setExamples([
@@ -331,10 +298,11 @@ bot.addCommand(new StructuredCommand.Builder()
 		'봇: 취소되었습니다.'
 	])
 	.setExecute((self, chat, channel, { 부서, 기수 }) => {
-		debugRoom1.send('notification checkpoint 1')
+		if (bot.isDebugMod)
+			debugRoom1.send('notification checkpoint 1')
 		// 부서가 적절한지 확인
-		if (!부서명List.includes(부서)) {
-			channel.warn(`${부서.은는} 적절한 부서가 아닙니다.\n\n가능한 부서: ${부서명List.join(', ')}`);
+		if (!departmentList.includes(부서)) {
+			channel.warn(`${부서.은는} 적절한 부서가 아닙니다.\n\n가능한 부서: ${departmentList.join(', ')}`);
 			return;
 		}
 		
@@ -439,7 +407,7 @@ bot.addCommand(new StructuredCommand.Builder()
 ////////////////////// 학사일정 명령어
 bot.addCommand(new NaturalCommand.Builder()
 	.setName('일정', '📅')
-	.setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.')
+	.setDescription('학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.')
 	.setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사')
 	.setUseDateParse(0, true)
 	.setQuery({
@@ -499,7 +467,6 @@ bot.addCommand(new NaturalCommand.Builder()
 ////////////////////// db 갱신
 bot.on(Event.MESSAGE, (chat, channel) => {
 	if (!isNumber(channel.customName)) { // 기수 톡방 검열
-		debugRoom1.send('43 인식 checkpoint')
 		return;
 	}
 	
@@ -515,10 +482,9 @@ bot.on(Event.MESSAGE, (chat, channel) => {
 
 ////////////////////// 봇 가동 시작
 bot.start();
-
 } catch (err) {
-	if (isValidChannel(logRoom))
-		logRoom.error(`봇 가동 중 오류가 발생했습니다.\n\n${err}\n${err.stack}`);
+	if (isValidChannel(debugRoom2))
+		debugRoom2.error(`봇 가동 중 오류가 발생했습니다.\n\n${err}\n${err.stack}`);
 
 	Log.error(err + '\n' + err.stack);
 }

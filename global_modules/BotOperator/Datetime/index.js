@@ -179,7 +179,7 @@ class DateTime {
 			else if (typeof datetimeObject === 'string')
 				dt = DateTime.fromString(datetimeObject, this._locale);
 			else
-				throw new TypeError('`datetimeObject` must be $D, datetime, number, object, or string');
+				throw new TypeError('`datetimeObject` must be $D, Datetime, number, object, or string');
 			
 			this._source = dt._source;
 			this._locale = dt._locale;
@@ -1157,7 +1157,7 @@ class DateTime {
 	}
 	
 	// static parse(dateString, locale = 'ko-KR') {
-	// 	return DateTime.fromObject(...DateTime._parse(dateString, locale));
+	// 	return Datetime.fromObject(...Datetime._parse(dateString, locale));
 	// }
 	//
 	// static _parse(dateString, locale = 'ko-KR') {
@@ -1341,7 +1341,7 @@ class DateTime {
 	// 		while (i < tokens.length) {
 	// 			if (keywords.relative.has(tokens[i])) {
 	// 				if (!standard)
-	// 					standard = DateTime.now();
+	// 					standard = Datetime.now();
 	//
 	// 				const multiplier = tokens[i] === 'ago' ? -1 : 1;
 	//
@@ -1407,14 +1407,14 @@ class DateTime {
 	// 		// [3, 'year', 'ago']
 	// 		const relativeParse = () => {
 	// 			const dateObject = {};
-	// 			let standard_now = DateTime.now();
+	// 			let standard_now = Datetime.now();
 	//
 	// 			for (let i = 0; i < tokens.length; i++) {
 	// 				let token = tokens[i];
 	//
 	// 				if (keywords.standard.has(token)) {     // 3월 3일로부터
-	// 					standard = DateTime._parse(tokens.slice(0, i).join(' '), locale)[0];
-	// 					standard_now = DateTime.fromObject(standard);
+	// 					standard = Datetime._parse(tokens.slice(0, i).join(' '), locale)[0];
+	// 					standard_now = Datetime.fromObject(standard);
 	// 				}
 	// 				else if (keywords.counts.has(token)) {    // [half] week, [end] month, 11 [th] month, 11 [th] sunday, ...
 	// 					tokens[i + 1] ??= 'millisecond';    // 2023년의 마지막 -> 2023년 12월 31일 23시 59분 59초 999밀리초
@@ -1438,7 +1438,7 @@ class DateTime {
 	// 						switch (tokenBack) {
 	// 							case 'year': {
 	// 								if (token === 'half')
-	// 									dateObject['day'] = amount(DateTime.lengthOfYear(dateObject['year'] ?? standard_now.year));
+	// 									dateObject['day'] = amount(Datetime.lengthOfYear(dateObject['year'] ?? standard_now.year));
 	// 								else
 	// 									throw new Error('invalid format: "th/end 해"');
 	//
@@ -1450,7 +1450,7 @@ class DateTime {
 	// 							}
 	// 							case 'month': {
 	// 								if (token === 'half') {
-	// 									dateObject['day'] = amount(DateTime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month));
+	// 									dateObject['day'] = amount(Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month));
 	// 									dateObject['hour'] = 0;
 	// 									dateObject['minute'] = 0;
 	// 									dateObject['second'] = 0;
@@ -1476,7 +1476,7 @@ class DateTime {
 	// 								}
 	// 								else {
 	// 									dateObject['day'] = standard_now.day + (0 - dateObject['weekday'] + 7) % 7;
-	// 									let lengthOfMonth = DateTime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month);
+	// 									let lengthOfMonth = Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month);
 	//
 	// 									// 만약 23일이 일요일이라면 16, 9, 2일이 셋째주, 둘째주, 셋째주가 됨
 	// 									// 23 % 7 == 2 이므로 2일이 첫주의 시작이 되어야 함
@@ -1505,7 +1505,7 @@ class DateTime {
 	// 									//
 	// 								// }
 	// 								else {  // th
-	// 									dateObject['day'] = amount(DateTime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month));
+	// 									dateObject['day'] = amount(Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month));
 	// 									dateObject['hour'] = 0;
 	// 									dateObject['minute'] = 0;
 	// 									dateObject['second'] = 0;
@@ -1560,8 +1560,8 @@ class DateTime {
 	// 								if (token === 'half')
 	// 									throw new Error('invalid format: "half 요일"');
 	// 								else {
-	// 									dateObject['day'] = standard_now.day + (DateTime.getWeekDayFromName(tokenBack, locale = 'en-US') - standard_now.weekday + 7) % 7;
-	// 									let lengthOfMonth = DateTime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month);
+	// 									dateObject['day'] = standard_now.day + (Datetime.getWeekDayFromName(tokenBack, locale = 'en-US') - standard_now.weekday + 7) % 7;
+	// 									let lengthOfMonth = Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month);
 	//
 	// 									let first = dateObject['day'] % 7;
 	// 									let weeks = [ first ];

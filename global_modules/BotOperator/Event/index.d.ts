@@ -1,5 +1,5 @@
 import { Args, Command } from "../Command";
-import { DateTime } from "../DateTime";
+import { DateTime } from "../Datetime";
 import { Chat, Channel, OpenChatJoinedFeed, InviteFeed, LeaveFeed, OpenChatKickedFeed, DeleteFeed, MemberTypeChangedFeed } from "../DBManager/classes";
 import { ChangeUserType } from "../DBManager/types";
 

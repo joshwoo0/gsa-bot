@@ -22,7 +22,7 @@ var _require4 = require('./Command'),
   CommandRegistry = _require4.CommandRegistry,
   StructuredCommand = _require4.StructuredCommand,
   Command = _require4.Command;
-var _require5 = require('./DateTime'),
+var _require5 = require('./Datetime'),
   DateTime = _require5.DateTime;
 var _require6 = require('./util'),
   isValidChannel = _require6.isValidChannel,
@@ -96,7 +96,7 @@ try {
         if (!Object.keys(Event).map(function (key) {
           return Event[key];
         }).includes(event)) {
-          throw new Error('Invalid event');
+          throw new Error('Invalid Event');
         }
         switch (event) {
           case Event.COMMAND:
@@ -122,7 +122,7 @@ try {
         if (!Object.keys(Event).map(function (key) {
           return Event[key];
         }).includes(event)) {
-          throw new Error('Invalid event');
+          throw new Error('Invalid Event');
         }
 
         // TODO: Event.COMMAND는 여러 리스너 공통임. 따로 안 됨 매뉴얼에 적기
