@@ -83,7 +83,7 @@ const getMeals = (dt, bullet) => {
 	try {
 		return connection.getMeals(dt)
 			.map(e =>
-				e.map(e => e === null ? null : bullet + e).join('\n')
+				e === null ? null : e.map(e => bullet + e).join('\n')
 			)
 	} catch (e) {
 		if (isValidChannel(debugRoom2))

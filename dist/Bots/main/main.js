@@ -105,8 +105,8 @@ var connection = new Connection(cache.get('apiKey'));
 var getMeals = function getMeals(dt, bullet) {
   try {
     return connection.getMeals(dt).map(function (e) {
-      return e.map(function (e) {
-        return e === null ? null : bullet + e;
+      return e === null ? null : e.map(function (e) {
+        return bullet + e;
       }).join('\n');
     });
   } catch (e) {
